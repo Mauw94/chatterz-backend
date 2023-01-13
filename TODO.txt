@@ -1,5 +1,7 @@
 * create hostedservice to empty db and cache every x time
 * save chats between users/groups
+* limit amount of chat groups a user can create
+* limit amount of chat groups in total
 
 * how to determine when the connectionid changes on a refresh, but keep the same state (user in group)
     ( I think you really should just forget about the connection ID's. In your hub, have a look at Context.User.Identity.Name )
