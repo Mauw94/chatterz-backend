@@ -13,7 +13,7 @@ namespace Chatterz.HUBS
 
         public override async Task OnConnectedAsync()
         {
-            await Clients.All.NewUserConnection("A new user connected");
+            await Clients.All.NewUserConnected("A new user connected");
         }
     }
 }
