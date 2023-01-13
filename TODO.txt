@@ -3,3 +3,8 @@
 
 * how to determine when the connectionid changes on a refresh, but keep the same state (user in group)
     ( I think you really should just forget about the connection ID's. In your hub, have a look at Context.User.Identity.Name )
+
+
+* be able to join a different groups
+* only send chats between groups
+* create login system
