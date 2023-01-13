@@ -14,7 +14,7 @@ namespace Chatterz.API.CachedDb
                 _tempDb.TryAdd(chatroomId, new List<T> { user });
         }
 
-        public virtual List<T> Get(T chatroomId)
+        public virtual List<T> ConnectedUsers(T chatroomId)
         {
             if (_tempDb.TryGetValue(chatroomId, out var connectedUsers))
                 return connectedUsers;

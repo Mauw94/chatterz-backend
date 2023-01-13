@@ -12,9 +12,9 @@ namespace Chatterz.API.CachedDb
             return base.GetAllChatrooms();
         }
 
-        public override List<string> Get(string chatroomId)
+        public override List<string> ConnectedUsers(string chatroomId)
         {
-            return base.Get(chatroomId);
+            return base.ConnectedUsers(chatroomId);
         }
     }
 }
