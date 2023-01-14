@@ -1,0 +1,2 @@
+* sometimes a message has a delay sending -> pressing send or enter 
+    multiple times sends the message multiple times
