@@ -6,14 +6,14 @@ namespace Chatterz.API.InMemoryDb
     {
         private readonly List<User> _users = new();
 
-        public bool Login(string username, string password)
+        public User? Login(string username, string password)
         {
-            var user = _users.FirstOrDefault(u => u.Username == username 
+            var user = _users.FirstOrDefault(u => u.UserName == username 
                                                 && u.Password == password);
             if (user == null)                                                
-                return false;
+                return null;
 
-            return true;
+            return user;
         }
         
         public User GetUser(string id)

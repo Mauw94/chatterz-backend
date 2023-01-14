@@ -17,6 +17,7 @@ namespace Chatterz.API
             builder.Services.AddSwaggerGen();
             builder.Services.AddSignalR().AddMessagePackProtocol();
             builder.Services.AddSingleton(typeof(IChatroomDb), typeof(ChatroomDb));
+            builder.Services.AddSingleton<IUsersDb, UsersDb>();
 
             var app = builder.Build();
 

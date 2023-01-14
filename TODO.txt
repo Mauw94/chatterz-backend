@@ -1,4 +1,5 @@
 * create login for users so we have a unique ID to identity users with
+* implement login authguard
 * implement EF!!
 * implement auth with google gmail
 * create hostedservice to empty db and cache every x time

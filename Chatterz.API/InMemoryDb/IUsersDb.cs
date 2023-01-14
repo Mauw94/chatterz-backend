@@ -6,6 +6,6 @@ namespace Chatterz.API.InMemoryDb
     {
         void SaveUser(User user);
         User GetUser(string id);
-        bool Login(string username, string password);
+        User? Login(string username, string password);
     }
 }

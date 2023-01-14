@@ -1,5 +1,6 @@
 using Chatterz.API.InMemoryDb;
 using Chatterz.Domain;
+using Chatterz.Domain.DTO;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Chatterz.API.Controllers
@@ -17,16 +18,22 @@ namespace Chatterz.API.Controllers
 
         [HttpPost]
         [Route("api/login/login")]
-        public ActionResult<bool> Login(string username, string password)
+        public ActionResult<User> Login(UserLoginDto userLogin)
         {
-            return Ok(_usersDb.Login(username, password));
+            var user = _usersDb.Login(userLogin.UserName, userLogin.Password);
+            if (user == null)
+                return BadRequest("Login credentials do not match.");
+
+            return Ok(user);
         }
 
         [HttpPost]
         [Route("api/login/create")]
-        public ActionResult<string> CreateTempUser(string username, string password)
+        public ActionResult<string> CreateTempUser(UserLoginDto userLogin)
         {
             var user = new User();
+            user.UserName = userLogin.UserName;
+            user.Password = userLogin.Password;
 
             _usersDb.SaveUser(user);
 
