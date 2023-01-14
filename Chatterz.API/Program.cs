@@ -1,4 +1,4 @@
-using Chatterz.API.CachedDb;
+using Chatterz.API.InMemoryDb;
 using Chatterz.HUBS;
 
 namespace Chatterz.API
@@ -16,7 +16,7 @@ namespace Chatterz.API
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
             builder.Services.AddSignalR().AddMessagePackProtocol();
-            builder.Services.AddSingleton(typeof(IUsersDbCaching), typeof(UsersDbCaching));
+            builder.Services.AddSingleton(typeof(IChatroomDb), typeof(ChatroomDb));
 
             var app = builder.Build();
 

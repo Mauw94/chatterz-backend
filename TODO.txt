@@ -1,5 +1,7 @@
+* create login for users so we have a unique ID to identity users with
 * create hostedservice to empty db and cache every x time
 * save chats between users/groups
+* create
 * limit amount of chat groups a user can create
 * limit amount of chat groups in total
 

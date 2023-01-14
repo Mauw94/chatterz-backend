@@ -1,4 +1,4 @@
-using Chatterz.API.CachedDb;
+using Chatterz.API.InMemoryDb;
 using Chatterz.Domain;
 using Chatterz.HUBS;
 using Microsoft.AspNetCore.Mvc;
@@ -10,9 +10,9 @@ namespace Chatterz.API.Controllers
     public class ChatroomController : ControllerBase 
     {
         private IHubContext<ChatHub> _hubContext;
-        private IUsersDbCaching _db;
+        private IChatroomDb _db;
         
-        public ChatroomController(IHubContext<ChatHub> hubContext, IUsersDbCaching db) 
+        public ChatroomController(IHubContext<ChatHub> hubContext, IChatroomDb db) 
         {
             _hubContext = hubContext;
             _db = db;
@@ -27,7 +27,8 @@ namespace Chatterz.API.Controllers
             await _hubContext.Groups.AddToGroupAsync(connectionInfo.ConnectionId, roomId);
             await _hubContext.Clients.Groups(roomId).SendAsync("UserConnected", connectionInfo.ConnectionId);
 
-            _db.Save(roomId, connectionInfo.ConnectionId);
+            if (!_db.SaveChatroom(roomId, connectionInfo.ConnectionId))
+                return BadRequest("Something went wrong creating and savint the chatroom.");
             
             return Ok(roomId);
         }
@@ -42,5 +43,22 @@ namespace Chatterz.API.Controllers
 
             return Ok(chatrooms);
         }
+
+        [HttpPost]
+        [Route("api/chatroom/send")]
+        public ActionResult Send(string chatroomId, ChatMessage chatMessage)
+        {
+            if (!_db.SaveChat(chatroomId, chatMessage))
+                return BadRequest($"Couldn't save chatroom {chatroomId}");
+            
+            return Ok();
+        }
+
+        [HttpGet]
+        [Route("api/chatroom/history")]
+        public ActionResult<List<string>> GetChatHistory(string chatroomId)
+        {
+            return Ok(_db.GetChatHistory(chatroomId));
+        }   
     }
 }
