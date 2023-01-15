@@ -6,16 +6,25 @@ namespace Chatterz.API.InMemoryDb
     {
         private readonly List<User> _users = new();
 
+        public UsersDb()
+        {
+            _users.Add(new User
+            {
+                UserName = "test",
+                Password = "123"
+            });
+        }
+
         public User? Login(string username, string password)
         {
-            var user = _users.FirstOrDefault(u => u.UserName == username 
+            var user = _users.FirstOrDefault(u => u.UserName == username
                                                 && u.Password == password);
-            if (user == null)                                                
+            if (user == null)
                 return null;
 
             return user;
         }
-        
+
         public User GetUser(string id)
         {
             var user = _users.FirstOrDefault(u => u.Id == id);
