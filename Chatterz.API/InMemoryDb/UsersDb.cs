@@ -34,6 +34,17 @@ namespace Chatterz.API.InMemoryDb
             return user;
         }
 
+        public void ChangeUsername(string newUsername, string userId)
+        {
+            var user = _users.FirstOrDefault(u => u.Id == userId);
+            if (user == null)
+                throw new ArgumentException($"User with id {userId} does not exists.");
+
+
+            user.UserName = newUsername;
+        }
+
+        public List<User> GetAll() => _users.ToList();
         public void SaveUser(User user) => _users.Add(user);
     }
 }

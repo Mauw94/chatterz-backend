@@ -7,5 +7,7 @@ namespace Chatterz.API.InMemoryDb
         void SaveUser(User user);
         User GetUser(string id);
         User? Login(string username, string password);
+        void ChangeUsername(string newUsername, string userId);
+        List<User> GetAll();
     }
 }

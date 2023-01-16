@@ -7,12 +7,12 @@ using Microsoft.AspNetCore.SignalR;
 namespace Chatterz.API.Controllers
 {
     [ApiController]
-    public class ChatroomController : ControllerBase 
+    public class ChatroomController : ControllerBase
     {
         private IHubContext<ChatHub> _hubContext;
         private IChatroomDb _db;
-        
-        public ChatroomController(IHubContext<ChatHub> hubContext, IChatroomDb db) 
+
+        public ChatroomController(IHubContext<ChatHub> hubContext, IChatroomDb db)
         {
             _hubContext = hubContext;
             _db = db;
@@ -29,7 +29,7 @@ namespace Chatterz.API.Controllers
 
             if (!_db.SaveChatroom(roomId, connectionInfo.ConnectionId))
                 return BadRequest("Something went wrong creating and savint the chatroom.");
-            
+
             return Ok(roomId);
         }
 
@@ -50,7 +50,7 @@ namespace Chatterz.API.Controllers
         {
             if (!_db.SaveChat(chatroomId, chatMessage))
                 return BadRequest($"Couldn't save chatroom {chatroomId}");
-            
+
             return Ok();
         }
 
@@ -59,6 +59,6 @@ namespace Chatterz.API.Controllers
         public ActionResult<List<string>> GetChatHistory(string chatroomId)
         {
             return Ok(_db.GetChatHistory(chatroomId));
-        }   
+        }
     }
 }
