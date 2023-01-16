@@ -1,10 +1,10 @@
-* implement cookies to see if we're still logged in
+* only send updates to chatroom the user is in (signalR)
+* be able to join/leave/create new chatrooms
 * unit tests :> ): >:|
 * implement EF!!
 * implement auth with google gmail
 * create hostedservice to empty db and cache every x time
 * save chats between users/groups
-* create
 * limit amount of chat groups a user can create
 * limit amount of chat groups in total
 

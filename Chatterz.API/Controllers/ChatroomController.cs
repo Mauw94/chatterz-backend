@@ -33,10 +33,19 @@ namespace Chatterz.API.Controllers
             await _hubContext.Groups.AddToGroupAsync(connectionInfo.ConnectionId, roomId);
             await _hubContext.Clients.Groups(roomId).SendAsync("UserConnected", connectionInfo.ConnectionId);
 
-            if (!_db.SaveChatroom(roomId, connectionInfo.UserId))
-                return BadRequest("Something went wrong creating and savint the chatroom.");
+            if (!_db.Join(roomId, connectionInfo.UserId))
+                return BadRequest("Something went wrong creating and saving the chatroom.");
 
             return Ok(roomId);
+        }
+
+        [HttpPost]
+        [Route("api/chatroom/join")]
+        public ActionResult Join(ChatroomJoinDto dto)
+        {
+            _db.Join(dto.ChatroomId, dto.UserId);
+
+            return Ok();
         }
 
         [HttpGet]
