@@ -31,19 +31,22 @@ namespace Chatterz.API.Controllers
             var roomId = Guid.NewGuid().ToString();
 
             await _hubContext.Groups.AddToGroupAsync(connectionInfo.ConnectionId, roomId);
-            await _hubContext.Clients.Groups(roomId).SendAsync("UserConnected", connectionInfo.ConnectionId);
+            await _hubContext.Clients.Group(roomId).SendAsync("UserConnected", connectionInfo.ConnectionId);
 
-            if (!_db.Join(roomId, connectionInfo.UserId))
-                return BadRequest("Something went wrong creating and saving the chatroom.");
+            _db.Join(roomId, connectionInfo.UserId);
 
             return Ok(roomId);
         }
 
         [HttpPost]
         [Route("api/chatroom/join")]
-        public ActionResult Join(ChatroomJoinDto dto)
+        public async Task<ActionResult> Join(ChatroomJoinDto dto)
         {
-            _db.Join(dto.ChatroomId, dto.UserId);
+            var oldChatroomId = _db.Join(dto.ChatroomId, dto.UserId);
+
+            await _hubContext.Groups.RemoveFromGroupAsync(dto.ConnectionId, oldChatroomId);
+            await _hubContext.Groups.AddToGroupAsync(dto.ConnectionId, dto.ChatroomId);
+            await _hubContext.Clients.Group(dto.ChatroomId).SendAsync("UserConnected", dto.ConnectionId);
 
             return Ok();
         }

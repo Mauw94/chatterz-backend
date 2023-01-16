@@ -8,7 +8,7 @@ namespace Chatterz.HUBS
     {
         public async Task BroadcastAsync(ChatMessage message)
         {
-            await Clients.All.MessageReceivedFromHub(message);
+            await Clients.Groups(message.ChatroomId).MessageReceivedFromHub(message);
         }
 
         public override async Task OnConnectedAsync()

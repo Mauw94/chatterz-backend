@@ -1,4 +1,5 @@
 * only send updates to chatroom the user is in (signalR)
+* find out when ConnectionId changes and update groups structure
 * be able to join/leave/create new chatrooms
 * unit tests :> ): >:|
 * implement EF!!

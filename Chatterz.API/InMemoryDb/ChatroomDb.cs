@@ -42,7 +42,7 @@ namespace Chatterz.API.InMemoryDb
             return null;
         }
 
-        public bool Join(string chatroomId, string userId)
+        public string Join(string chatroomId, string userId)
         {
             var oldChatroomId = _tempDb.Where(x => x.Value.Contains(userId)).FirstOrDefault().Key;
 
@@ -51,13 +51,13 @@ namespace Chatterz.API.InMemoryDb
             else
             {
                 if (!_tempDb.TryAdd(chatroomId, new List<string> { userId }))
-                    return false;
+                    throw new ArgumentException("Can't craete new chatroom or add new user");
             }
 
             if (oldChatroomId != null)
                 _tempDb[oldChatroomId].Remove(userId);
 
-            return true;
+            return oldChatroomId;
         }
     }
 }
