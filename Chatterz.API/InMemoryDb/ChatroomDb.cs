@@ -7,7 +7,7 @@ namespace Chatterz.API.InMemoryDb
         private readonly Dictionary<string, List<string>> _tempDb = new(); // key: chatroom | value: connected users
         private readonly Dictionary<string, List<ChatMessage>> _chatHistory = new(); // key: chatroom | value: chats
     
-        public virtual bool SaveChatroom(string chatroomId, string user)
+        public bool SaveChatroom(string chatroomId, string user)
         {
             if (_tempDb.ContainsKey(chatroomId))
                 _tempDb[chatroomId].Add(user);
@@ -18,7 +18,7 @@ namespace Chatterz.API.InMemoryDb
             return true;
         }
 
-        public virtual bool SaveChat(string chatroomId, ChatMessage chatMessage)
+        public bool SaveChat(string chatroomId, ChatMessage chatMessage)
         {
             if (_chatHistory.ContainsKey(chatroomId))
                 _chatHistory[chatroomId].Add(chatMessage);
@@ -29,7 +29,7 @@ namespace Chatterz.API.InMemoryDb
             return true;
         }
 
-        public virtual List<ChatMessage> GetChatHistory(string chatroomId)
+        public List<ChatMessage> GetChatHistory(string chatroomId)
         {
             if (_chatHistory.TryGetValue(chatroomId, out var chatMessages))
                 return chatMessages;
@@ -37,7 +37,7 @@ namespace Chatterz.API.InMemoryDb
             throw new KeyNotFoundException($"Could not find chatroom {chatroomId}");
         }
 
-        public virtual List<string> ConnectedUsers(string chatroomId)
+        public List<string> ConnectedUsers(string chatroomId)
         {
             if (_tempDb.TryGetValue(chatroomId, out var connectedUsers))
                 return connectedUsers;
@@ -45,10 +45,10 @@ namespace Chatterz.API.InMemoryDb
                 throw new ArgumentException($"Key was not found {chatroomId}");
         }
 
-        public virtual List<string> GetAllChatrooms()
+        public Dictionary<string, List<string>> GetAllChatrooms()
         {
             if (_tempDb.Keys.Any())
-                return _tempDb.Keys.ToList();
+                return _tempDb;
             
             return null;
         }

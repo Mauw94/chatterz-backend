@@ -1,5 +1,6 @@
 using Chatterz.API.InMemoryDb;
 using Chatterz.Domain;
+using Chatterz.Domain.DTO;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Chatterz.API.Controllers
@@ -16,9 +17,9 @@ namespace Chatterz.API.Controllers
 
         [HttpPost]
         [Route("api/users/change_username")]
-        public ActionResult ChangeUsername(string newUsername, string userId)
+        public ActionResult ChangeUsername(ChangeUsernameDto dto)
         {
-            _usersDb.ChangeUsername(newUsername, userId);
+            _usersDb.ChangeUsername(dto.NewUsername, dto.UserId);
             return Ok();
         }
 

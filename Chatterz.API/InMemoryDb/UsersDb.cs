@@ -15,6 +15,11 @@ namespace Chatterz.API.InMemoryDb
             });
         }
 
+        public User FetchTestUser() // Debug/test method
+        {
+            return _users.First();
+        }
+
         public User? Login(string username, string password)
         {
             var user = _users.FirstOrDefault(u => u.UserName == username

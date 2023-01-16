@@ -8,6 +8,6 @@ namespace Chatterz.API.InMemoryDb
         bool SaveChat(string chatroomId, ChatMessage chatMessage);
         List<ChatMessage> GetChatHistory(string chatroomId);
         List<string> ConnectedUsers(string chatroomId);
-        List<string> GetAllChatrooms();
+        Dictionary<string, List<string>> GetAllChatrooms();
     }
 }

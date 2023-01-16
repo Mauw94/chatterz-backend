@@ -16,6 +16,13 @@ namespace Chatterz.API.Controllers
             _usersDb = usersDb;
         }
 
+        [HttpGet]
+        [Route("api/login/new")] // test/debug method
+        public ActionResult<User> FetchTestUser()
+        {
+            return Ok(_usersDb.FetchTestUser());
+        }
+
         [HttpPost]
         [Route("api/login/login")]
         public ActionResult<User> Login(UserLoginDto userLogin)

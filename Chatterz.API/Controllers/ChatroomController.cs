@@ -1,5 +1,6 @@
 using Chatterz.API.InMemoryDb;
 using Chatterz.Domain;
+using Chatterz.Domain.DTO;
 using Chatterz.HUBS;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
@@ -11,11 +12,16 @@ namespace Chatterz.API.Controllers
     {
         private IHubContext<ChatHub> _hubContext;
         private IChatroomDb _db;
+        private IUsersDb _usersDb;
 
-        public ChatroomController(IHubContext<ChatHub> hubContext, IChatroomDb db)
+        public ChatroomController(
+            IHubContext<ChatHub> hubContext,
+            IChatroomDb db,
+            IUsersDb usersDb)
         {
             _hubContext = hubContext;
             _db = db;
+            _usersDb = usersDb;
         }
 
         [HttpPost]
@@ -27,7 +33,7 @@ namespace Chatterz.API.Controllers
             await _hubContext.Groups.AddToGroupAsync(connectionInfo.ConnectionId, roomId);
             await _hubContext.Clients.Groups(roomId).SendAsync("UserConnected", connectionInfo.ConnectionId);
 
-            if (!_db.SaveChatroom(roomId, connectionInfo.ConnectionId))
+            if (!_db.SaveChatroom(roomId, connectionInfo.UserId))
                 return BadRequest("Something went wrong creating and savint the chatroom.");
 
             return Ok(roomId);
@@ -35,13 +41,37 @@ namespace Chatterz.API.Controllers
 
         [HttpGet]
         [Route("api/chatroom/all")]
-        public ActionResult<List<string>> GetAllChatrooms()
+        public ActionResult<List<ChatroomDto>> GetAllChatrooms()
         {
             var chatrooms = _db.GetAllChatrooms();
             if (chatrooms == null)
-                return NotFound($"No chatrooms found to display");
+                return Ok(null);
 
-            return Ok(chatrooms);
+            var dtos = new List<ChatroomDto>();
+
+            foreach (var chatroom in chatrooms)
+            {
+                var users = new List<User>();
+
+                if (chatroom.Value.Any())
+                {
+                    foreach (var userId in chatroom.Value)
+                    {
+                        users.Add(_usersDb.GetUser(userId));
+                    }
+                }
+
+                dtos.Add
+                (
+                    new ChatroomDto
+                    {
+                        Id = chatroom.Key,
+                        Users = users
+                    }
+                );
+            }
+
+            return Ok(dtos);
         }
 
         [HttpPost]

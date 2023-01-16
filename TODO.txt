@@ -1,4 +1,5 @@
 * implement cookies to see if we're still logged in
+* unit tests :> ): >:|
 * implement EF!!
 * implement auth with google gmail
 * create hostedservice to empty db and cache every x time
