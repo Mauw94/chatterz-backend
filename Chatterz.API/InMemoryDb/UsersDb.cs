@@ -13,6 +13,11 @@ namespace Chatterz.API.InMemoryDb
                 UserName = "test",
                 Password = "123"
             });
+            _users.Add(new User
+            {
+                UserName = "123",
+                Password = "test"
+            });
         }
 
         public User FetchTestUser() // Debug/test method
