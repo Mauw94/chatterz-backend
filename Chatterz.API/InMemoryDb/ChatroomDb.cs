@@ -42,7 +42,7 @@ namespace Chatterz.API.InMemoryDb
             return null;
         }
 
-        public string Join(string chatroomId, string userId)
+        public string? Join(string chatroomId, string userId)
         {
             var oldChatroomId = _tempDb.Where(x => x.Value.Contains(userId)).FirstOrDefault().Key;
 
