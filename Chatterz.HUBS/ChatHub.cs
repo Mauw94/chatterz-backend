@@ -10,10 +10,5 @@ namespace Chatterz.HUBS
         {
             await Clients.Groups(message.ChatroomId).MessageReceivedFromHub(message);
         }
-
-        public override async Task OnConnectedAsync()
-        {
-            await Clients.All.NewUserConnected("A new user connected");
-        }
     }
 }
