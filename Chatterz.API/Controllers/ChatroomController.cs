@@ -29,11 +29,8 @@ namespace Chatterz.API.Controllers
         public async Task<ActionResult<string>> Create(Chatterz.Domain.ConnectionInfo connectionInfo)
         {
             var roomId = Guid.NewGuid().ToString();
-
-            await _hubContext.Groups.AddToGroupAsync(connectionInfo.ConnectionId, roomId);
-            await _hubContext.Clients.Group(roomId).SendAsync("UserConnected", connectionInfo.ConnectionId);
-
-            _db.Join(roomId, connectionInfo.UserId);
+            _db.SaveChatroom(roomId);
+            await _hubContext.Clients.All.SendAsync("RoomsUpdated", GetAllChatrooms());
 
             return Ok(roomId);
         }
@@ -44,7 +41,9 @@ namespace Chatterz.API.Controllers
         {
             var oldChatroomId = _db.Join(dto.ChatroomId, dto.UserId);
 
-            await _hubContext.Groups.RemoveFromGroupAsync(dto.ConnectionId, oldChatroomId);
+            if (oldChatroomId != null)
+                await _hubContext.Groups.RemoveFromGroupAsync(dto.ConnectionId, oldChatroomId);
+
             await _hubContext.Groups.AddToGroupAsync(dto.ConnectionId, dto.ChatroomId);
             await _hubContext.Clients.Group(dto.ChatroomId).SendAsync("UserConnected", dto.ConnectionId);
 
@@ -53,11 +52,35 @@ namespace Chatterz.API.Controllers
 
         [HttpGet]
         [Route("api/chatroom/all")]
-        public ActionResult<List<ChatroomDto>> GetAllChatrooms()
+        public ActionResult<List<ChatroomDto>> GetAll()
+        {
+            var chatrooms = GetAllChatrooms();
+
+            return Ok(chatrooms);
+        }
+
+        [HttpPost]
+        [Route("api/chatroom/send")]
+        public ActionResult Send(string chatroomId, ChatMessage chatMessage)
+        {
+            if (!_db.SaveChat(chatroomId, chatMessage))
+                return BadRequest($"Couldn't save chatroom {chatroomId}");
+
+            return Ok();
+        }
+
+        [HttpGet]
+        [Route("api/chatroom/history")]
+        public ActionResult<List<string>> GetChatHistory(string chatroomId)
+        {
+            return Ok(_db.GetChatHistory(chatroomId));
+        }
+
+        private List<ChatroomDto> GetAllChatrooms()
         {
             var chatrooms = _db.GetAllChatrooms();
             if (chatrooms == null)
-                return Ok(null);
+                return null;
 
             var dtos = new List<ChatroomDto>();
 
@@ -83,24 +106,7 @@ namespace Chatterz.API.Controllers
                 );
             }
 
-            return Ok(dtos);
-        }
-
-        [HttpPost]
-        [Route("api/chatroom/send")]
-        public ActionResult Send(string chatroomId, ChatMessage chatMessage)
-        {
-            if (!_db.SaveChat(chatroomId, chatMessage))
-                return BadRequest($"Couldn't save chatroom {chatroomId}");
-
-            return Ok();
-        }
-
-        [HttpGet]
-        [Route("api/chatroom/history")]
-        public ActionResult<List<string>> GetChatHistory(string chatroomId)
-        {
-            return Ok(_db.GetChatHistory(chatroomId));
+            return dtos;
         }
     }
 }

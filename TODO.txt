@@ -1,6 +1,10 @@
-* only send updates to chatroom the user is in (signalR)
-* find out when ConnectionId changes and update groups structure
-* update chatrooms when chatrooms is added or removed
+* find out when ConnectionId changes and update groups structure -> DONE -> needs more testing
+
+* show if user disconnect/left room
+* show how many people are in a chatroom
+* when creating a chatroom be able to give it a proper name and display instead of id
+* save chat history for a chatroom
+* update chatrooms when chatrooms is added or removed -> with signalR
 * difference between public and private rooms
 * only admin users can add or remove a chatroom
 * be able to join/leave/create new chatrooms

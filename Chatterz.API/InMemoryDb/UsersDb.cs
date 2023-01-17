@@ -10,13 +10,13 @@ namespace Chatterz.API.InMemoryDb
         {
             _users.Add(new User
             {
-                UserName = "test",
+                UserName = "john",
                 Password = "123"
             });
             _users.Add(new User
             {
-                UserName = "123",
-                Password = "test"
+                UserName = "hank",
+                Password = "123"
             });
         }
 

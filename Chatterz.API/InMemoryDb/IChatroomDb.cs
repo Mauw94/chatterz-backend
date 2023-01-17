@@ -6,6 +6,7 @@ namespace Chatterz.API.InMemoryDb
     {
         string? Join(string chatroomId, string userId);
         bool SaveChat(string chatroomId, ChatMessage chatMessage);
+        bool SaveChatroom(string chatroomId);
         List<ChatMessage> GetChatHistory(string chatroomId);
         List<string> ConnectedUsers(string chatroomId);
         Dictionary<string, List<string>> GetAllChatrooms();

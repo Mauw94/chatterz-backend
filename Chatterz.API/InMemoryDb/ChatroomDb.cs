@@ -7,6 +7,11 @@ namespace Chatterz.API.InMemoryDb
         private readonly Dictionary<string, List<string>> _tempDb = new(); // key: chatroom | value: connected users (userId)
         private readonly Dictionary<string, List<ChatMessage>> _chatHistory = new(); // key: chatroom | value: chats
 
+        public bool SaveChatroom(string chatroomId)
+        {
+            return _tempDb.TryAdd(chatroomId, new List<string>());
+        }
+
         public bool SaveChat(string chatroomId, ChatMessage chatMessage)
         {
             if (_chatHistory.ContainsKey(chatroomId))
