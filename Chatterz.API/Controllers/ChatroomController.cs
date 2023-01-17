@@ -61,17 +61,17 @@ namespace Chatterz.API.Controllers
 
         [HttpPost]
         [Route("api/chatroom/send")]
-        public ActionResult Send(string chatroomId, ChatMessage chatMessage)
+        public ActionResult Send(ChatMessage chatMessage)
         {
-            if (!_db.SaveChat(chatroomId, chatMessage))
-                return BadRequest($"Couldn't save chatroom {chatroomId}");
+            if (!_db.SaveChat(chatMessage))
+                return BadRequest($"Couldn't save chatroom {chatMessage.ChatroomId}");
 
             return Ok();
         }
 
         [HttpGet]
         [Route("api/chatroom/history")]
-        public ActionResult<List<string>> GetChatHistory(string chatroomId)
+        public ActionResult<List<ChatMessage>> GetChatHistory(string chatroomId)
         {
             return Ok(_db.GetChatHistory(chatroomId));
         }

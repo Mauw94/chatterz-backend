@@ -12,12 +12,12 @@ namespace Chatterz.API.InMemoryDb
             return _tempDb.TryAdd(chatroomId, new List<string>());
         }
 
-        public bool SaveChat(string chatroomId, ChatMessage chatMessage)
+        public bool SaveChat(ChatMessage chatMessage)
         {
-            if (_chatHistory.ContainsKey(chatroomId))
-                _chatHistory[chatroomId].Add(chatMessage);
+            if (_chatHistory.ContainsKey(chatMessage.ChatroomId))
+                _chatHistory[chatMessage.ChatroomId].Add(chatMessage);
             else
-                if (!_chatHistory.TryAdd(chatroomId, new List<ChatMessage> { chatMessage }))
+                if (!_chatHistory.TryAdd(chatMessage.ChatroomId, new List<ChatMessage> { chatMessage }))
                 return false;
 
             return true;
