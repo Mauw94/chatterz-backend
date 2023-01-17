@@ -10,6 +10,7 @@
 * be able to join/leave/create new chatrooms
 * unit tests :> ): >:|
 * implement EF!!
+* send notification when one of ur friends comes online
 * implement auth with google gmail
 * create hostedservice to empty db and cache every x time
 * save chats between users/groups
