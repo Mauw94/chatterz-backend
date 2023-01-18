@@ -40,12 +40,13 @@ namespace Chatterz.API.Controllers
         public async Task<ActionResult> Join(ChatroomJoinDto dto)
         {
             var oldChatroomId = _db.Join(dto.ChatroomId, dto.UserId);
+            var user = _usersDb.GetUser(dto.UserId);
 
             if (oldChatroomId != null)
                 await _hubContext.Groups.RemoveFromGroupAsync(dto.ConnectionId, oldChatroomId);
 
             await _hubContext.Groups.AddToGroupAsync(dto.ConnectionId, dto.ChatroomId);
-            await _hubContext.Clients.Group(dto.ChatroomId).SendAsync("UserConnected", dto.ConnectionId);
+            await _hubContext.Clients.Group(dto.ChatroomId).SendAsync("UserConnected", user.UserName);
 
             return Ok();
         }

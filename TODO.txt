@@ -1,6 +1,6 @@
 * find out when ConnectionId changes and update groups structure -> DONE -> needs more testing
 
-* show if user disconnect/left room
+* show if user disconnect/left room in the chat
 * show how many people are in a chatroom
 * when creating a chatroom be able to give it a proper name and display instead of id
 * save chat history for a chatroom
