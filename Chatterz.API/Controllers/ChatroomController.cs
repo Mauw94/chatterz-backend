@@ -54,6 +54,18 @@ namespace Chatterz.API.Controllers
             return Ok();
         }
 
+        [HttpPost]
+        [Route("api/chatroom/leave")]
+        public async Task<ActionResult> Leave(ChatroomJoinDto dto)
+        {
+            _db.Leave(dto.ChatroomId, dto.UserId);
+            var user = _usersDb.GetUser(dto.UserId);
+            await _hubContext.Groups.RemoveFromGroupAsync(dto.ConnectionId, dto.ChatroomId);
+            await _hubContext.Clients.Group(dto.ChatroomId).SendAsync("UserDisconnected", user.UserName);
+
+            return Ok();
+        }
+
         [HttpGet]
         [Route("api/chatroom/all")]
         public ActionResult<List<ChatroomDto>> GetAll()

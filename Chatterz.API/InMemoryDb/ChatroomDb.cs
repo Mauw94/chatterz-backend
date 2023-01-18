@@ -64,5 +64,13 @@ namespace Chatterz.API.InMemoryDb
 
             return oldChatroomId;
         }
+
+        public void Leave(string chatroomId, string userId)
+        {
+            if (_tempDb.ContainsKey(chatroomId) && _tempDb[chatroomId].Contains(userId))
+                _tempDb[chatroomId].Remove(userId);
+            else
+                throw new ArgumentException($"{chatroomId} doesn't contain user {userId}");
+        }
     }
 }
