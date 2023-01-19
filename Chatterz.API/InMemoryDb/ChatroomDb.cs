@@ -28,7 +28,7 @@ namespace Chatterz.API.InMemoryDb
             if (_chatHistory.TryGetValue(chatroomId, out var chatMessages))
                 return chatMessages.TakeLast(20).ToList();
 
-            throw new KeyNotFoundException($"Could not find chatroom {chatroomId}");
+            return null;
         }
 
         public List<string> ConnectedUsers(string chatroomId)
