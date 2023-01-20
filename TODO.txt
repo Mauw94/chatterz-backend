@@ -1,8 +1,6 @@
 * find out when ConnectionId changes and update groups structure -> DONE -> needs more testing
 
 * show logging in icon when logging in
-* clear chat when joining a new chatroom
-* only show leave button when ur in that actual chatroom 
 * show how many people are in a chatroom
 * when creating a chatroom be able to give it a proper name and display instead of id
 * save chat history for a chatroom
