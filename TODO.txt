@@ -1,31 +1,17 @@
 * find out when ConnectionId changes and update groups structure -> DONE -> needs more testing
 
+* send update to everyone in the room when u change username
 * show logging in icon when logging in
-* show how many people are in a chatroom
 * when creating a chatroom be able to give it a proper name and display instead of id
-* save chat history for a chatroom
-* update chatrooms when chatrooms is added or removed -> with signalR
 * difference between public and private rooms
 * only admin users can add or remove a chatroom
-* be able to join/leave/create new chatrooms
 * unit tests :> ): >:|
 * implement EF!!
 * send notification when one of ur friends comes online
 * implement auth with google gmail
 * create hostedservice to empty db and cache every x time
-* save chats between users/groups
 * limit amount of chat groups a user can create
 * limit amount of chat groups in total
-
-* how to determine when the connectionid changes on a refresh, but keep the same state (user in group)
-    ( I think you really should just forget about the connection ID's. In your hub, have a look at Context.User.Identity.Name )
-
-
-* be able to join a different groups
-* only send chats between groups
-* create login system
 * play a sound when a message is received
-* show time of the message
 * can choose color for name
-* send update to everyone in the room when u change username
 * be able to add friends (when users/login is done)

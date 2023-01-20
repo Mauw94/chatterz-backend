@@ -7,6 +7,8 @@ namespace Chatterz.API.InMemoryDb
         private readonly Dictionary<string, List<string>> _tempDb = new(); // key: chatroom | value: connected users (userId)
         private readonly Dictionary<string, List<ChatMessage>> _chatHistory = new(); // key: chatroom | value: chats
 
+        private const int CHATROOM_MAX_USERS = 5;
+
         public bool SaveChatroom(string chatroomId)
         {
             return _tempDb.TryAdd(chatroomId, new List<string>());
@@ -52,7 +54,10 @@ namespace Chatterz.API.InMemoryDb
             var oldChatroomId = _tempDb.Where(x => x.Value.Contains(userId)).FirstOrDefault().Key;
 
             if (_tempDb.ContainsKey(chatroomId))
-                _tempDb[chatroomId].Add(userId);
+            {
+                if (_tempDb.Count() < CHATROOM_MAX_USERS)
+                    _tempDb[chatroomId].Add(userId);
+            }
             else
             {
                 if (!_tempDb.TryAdd(chatroomId, new List<string> { userId }))

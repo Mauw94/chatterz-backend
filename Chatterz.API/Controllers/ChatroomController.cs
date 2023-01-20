@@ -50,6 +50,7 @@ namespace Chatterz.API.Controllers
 
             await _hubContext.Groups.AddToGroupAsync(dto.ConnectionId, dto.ChatroomId);
             await _hubContext.Clients.Group(dto.ChatroomId).SendAsync("UserConnected", user.UserName);
+            await _hubContext.Clients.All.SendAsync("RoomsUpdated", GetAllChatrooms());
 
             return Ok();
         }
@@ -62,7 +63,8 @@ namespace Chatterz.API.Controllers
             var user = _usersDb.GetUser(dto.UserId);
             await _hubContext.Groups.RemoveFromGroupAsync(dto.ConnectionId, dto.ChatroomId);
             await _hubContext.Clients.Group(dto.ChatroomId).SendAsync("UserDisconnected", user.UserName);
-
+            await _hubContext.Clients.All.SendAsync("RoomsUpdated", GetAllChatrooms());
+            
             return Ok();
         }
 
