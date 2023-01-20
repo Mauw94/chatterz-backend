@@ -1,10 +1,7 @@
-* find out when ConnectionId changes and update groups structure -> DONE -> needs more testing
-
-* send update to everyone in the room when u change username
-* show logging in icon when logging in
 * when creating a chatroom be able to give it a proper name and display instead of id
-* difference between public and private rooms
 * only admin users can add or remove a chatroom
+* show logging in icon when logging in
+* difference between public and private rooms
 * unit tests :> ): >:|
 * implement EF!!
 * send notification when one of ur friends comes online
