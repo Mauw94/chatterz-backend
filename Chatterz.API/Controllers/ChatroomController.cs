@@ -10,9 +10,9 @@ namespace Chatterz.API.Controllers
     [ApiController]
     public class ChatroomController : ControllerBase
     {
-        private IHubContext<ChatHub> _hubContext;
-        private IChatroomDb _db;
-        private IUsersDb _usersDb;
+        private readonly IHubContext<ChatHub> _hubContext;
+        private readonly IChatroomDb _db;
+        private readonly IUsersDb _usersDb;
 
         public ChatroomController(
             IHubContext<ChatHub> hubContext,
@@ -26,7 +26,7 @@ namespace Chatterz.API.Controllers
 
         [HttpPost]
         [Route("api/chatroom/create")]
-        public async Task<ActionResult<string>> Create(Chatterz.Domain.ConnectionInfo connectionInfo)
+        public async Task<ActionResult<string>> Create()
         {
             var roomId = Guid.NewGuid().ToString();
             _db.SaveChatroom(roomId);
