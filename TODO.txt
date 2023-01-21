@@ -1,3 +1,9 @@
+* be able to invite/challenge someone to play a game (for now just 1v1)
+* create gameroom
+* be able to switch chat component to gameroom chat/chatroom chat
+* gameroom (max 2) and chatroom (max 5) are different
+* allow people to spectate games?
+* challengde sonm to play
 * when creating a chatroom be able to give it a proper name and display instead of id
 * only admin users can add or remove a chatroom
 * show logging in icon when logging in

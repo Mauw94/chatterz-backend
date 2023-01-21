@@ -4,6 +4,7 @@ namespace Chatterz.API.InMemoryDb
 {
     public class ChatroomDb : IChatroomDb
     {
+        private List<Chatroom> _chatrooms = new();
         private readonly Dictionary<string, List<string>> _tempDb = new(); // key: chatroom | value: connected users (userId)
         private readonly Dictionary<string, List<ChatMessage>> _chatHistory = new(); // key: chatroom | value: chats
 
@@ -11,7 +12,11 @@ namespace Chatterz.API.InMemoryDb
 
         public bool SaveChatroom(string chatroomId)
         {
-            return _tempDb.TryAdd(chatroomId, new List<string>());
+            if (!_tempDb.TryAdd(chatroomId, new List<string>()))
+                return false;
+
+            _chatrooms.Add(new Chatroom() { Id = chatroomId, Name = "" });
+            return true;
         }
 
         public bool SaveChat(ChatMessage chatMessage)
