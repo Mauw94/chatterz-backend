@@ -42,7 +42,7 @@ namespace Chatterz.API.Controllers
             var oldChatroomId = _db.Join(dto.ChatroomId, dto.UserId);
             var user = _usersDb.GetUser(dto.UserId);
 
-            if (oldChatroomId != null) 
+            if (oldChatroomId != null)
             {
                 await _hubContext.Groups.RemoveFromGroupAsync(dto.ConnectionId, oldChatroomId);
                 await _hubContext.Clients.Group(oldChatroomId).SendAsync("UserDisconnected", user.UserName);
@@ -64,7 +64,7 @@ namespace Chatterz.API.Controllers
             await _hubContext.Groups.RemoveFromGroupAsync(dto.ConnectionId, dto.ChatroomId);
             await _hubContext.Clients.Group(dto.ChatroomId).SendAsync("UserDisconnected", user.UserName);
             await _hubContext.Clients.All.SendAsync("RoomsUpdated", GetAllChatrooms());
-            
+
             return Ok();
         }
 
@@ -92,6 +92,22 @@ namespace Chatterz.API.Controllers
         public ActionResult<List<ChatMessage>> GetChatHistory(string chatroomId)
         {
             return Ok(_db.GetChatHistory(chatroomId));
+        }
+
+        [HttpGet]
+        [Route("api/chatroom/users")]
+        public ActionResult<List<User>> GetConnectedUsers(string chatroomId)
+        {
+            var userIds = _db.ConnectedUsers(chatroomId);
+            var users = new List<User>();
+
+            foreach (var id in userIds)
+            {
+                var user = _usersDb.GetUser(id);
+                users.Add(user);
+            }
+
+            return Ok(users);
         }
 
         private List<ChatroomDto> GetAllChatrooms()

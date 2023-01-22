@@ -1,4 +1,5 @@
 using Chatterz.Domain;
+using Chatterz.Domain.DTO;
 
 namespace Chatterz.API.InMemoryDb
 {
@@ -36,6 +37,10 @@ namespace Chatterz.API.InMemoryDb
                 return chatMessages.TakeLast(20).ToList();
 
             return null;
+        }
+        public ChatroomDto Get(string id)
+        {
+            throw new NotImplementedException();
         }
 
         public List<string> ConnectedUsers(string chatroomId)

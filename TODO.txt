@@ -1,3 +1,5 @@
+* show scrollbar for chatrooms -> fixed width like chatMessages
+* show scrollbar for gamerooms -> fixed width liek chatMessages
 * be able to invite/challenge someone to play a game (for now just 1v1)
 * create gameroom
 * be able to switch chat component to gameroom chat/chatroom chat
