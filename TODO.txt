@@ -8,7 +8,7 @@
 
     BUGS: 
     * code needs some refactoring
-    * users component not correctly updating when joining chatroom?
+    * window.confirm is popping up twice
 
 * create gameroom
 * be able to switch chat component to gameroom chat/chatroom chat
