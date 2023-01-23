@@ -24,8 +24,8 @@ namespace Chatterz.API
             // Configure the HTTP request pipeline.
             // if (app.Environment.IsDevelopment())
             // {
-                app.UseSwagger();
-                app.UseSwaggerUI();
+            app.UseSwagger();
+            app.UseSwaggerUI();
             //  }
 
             app.UseCors(config => config
@@ -37,7 +37,7 @@ namespace Chatterz.API
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
-
+            app.UseAuthentication();
 
             app.MapControllers();
             app.MapHub<ChatHub>("/signalr");
