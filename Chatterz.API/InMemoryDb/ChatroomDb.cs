@@ -71,7 +71,7 @@ namespace Chatterz.API.InMemoryDb
             else
             {
                 if (!_tempDb.TryAdd(chatroomId, new List<string> { userId }))
-                    throw new ArgumentException("Can't craete new chatroom or add new user");
+                    throw new ArgumentException("Can't create new chatroom or add new user");
             }
 
             if (oldChatroomId != null)

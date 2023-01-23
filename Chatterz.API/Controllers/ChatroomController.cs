@@ -41,6 +41,13 @@ namespace Chatterz.API.Controllers
         {
             var oldChatroomId = _db.Join(dto.ChatroomId, dto.UserId);
             var user = _usersDb.GetUser(dto.UserId);
+            var userIds = _db.ConnectedUsers(dto.ChatroomId);
+            var users = new List<User>(); // TODO new dto for this
+            foreach (var id in userIds) // TODO: when i finally implement EF this will not be so shit
+            {
+                var u = _usersDb.GetUser(id);
+                users.Add(u);
+            }
 
             if (oldChatroomId != null)
             {
@@ -50,6 +57,7 @@ namespace Chatterz.API.Controllers
 
             await _hubContext.Groups.AddToGroupAsync(dto.ConnectionId, dto.ChatroomId);
             await _hubContext.Clients.Group(dto.ChatroomId).SendAsync("UserConnected", user.UserName);
+            await _hubContext.Clients.Group(dto.ChatroomId).SendAsync("UpdateUsersList", users);
             await _hubContext.Clients.All.SendAsync("RoomsUpdated", GetAllChatrooms());
 
             return Ok();
@@ -60,9 +68,19 @@ namespace Chatterz.API.Controllers
         public async Task<ActionResult> Leave(ChatroomJoinDto dto)
         {
             _db.Leave(dto.ChatroomId, dto.UserId);
+
+            var userIds = _db.ConnectedUsers(dto.ChatroomId);
+            var users = new List<User>(); // TODO new dto for this
+            foreach (var id in userIds) // TODO: when i finally implement EF this will not be so shit
+            {
+                var u = _usersDb.GetUser(id);
+                users.Add(u);
+            }
+
             var user = _usersDb.GetUser(dto.UserId);
             await _hubContext.Groups.RemoveFromGroupAsync(dto.ConnectionId, dto.ChatroomId);
             await _hubContext.Clients.Group(dto.ChatroomId).SendAsync("UserDisconnected", user.UserName);
+            await _hubContext.Clients.Group(dto.ChatroomId).SendAsync("UpdateUsersList", users);
             await _hubContext.Clients.All.SendAsync("RoomsUpdated", GetAllChatrooms());
 
             return Ok();
