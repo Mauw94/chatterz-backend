@@ -12,7 +12,7 @@ namespace Chatterz.API.Controllers
     {
         private IUsersDb _usersDb;
         private IHubContext<ChatHub> _hubContext;
-        
+
         public UsersController(IUsersDb usersDb, IHubContext<ChatHub> hubContext)
         {
             _usersDb = usersDb;
@@ -39,11 +39,28 @@ namespace Chatterz.API.Controllers
 
         [HttpGet]
         [Route("api/users/challenge")]
-        public async Task<ActionResult> Challenge(string userId, string inviteMessage)
+        public async Task<ActionResult> Challenge(string challengerUserId, string userId, string inviteMessage)
         {
             var user = _usersDb.GetUser(userId);
+            var challenger = _usersDb.GetUser(challengerUserId);
+            var gameInviteDto = new GameInviteDto();
+            gameInviteDto.Challenger = challenger;
+            gameInviteDto.InviteMessage = challenger.UserName + " " + inviteMessage;
 
-            await _hubContext.Clients.Client(user.ConnectionId).SendAsync("GameInvite", inviteMessage);
+            await _hubContext.Clients.Client(user.ConnectionId).SendAsync("GameInvite", gameInviteDto);
+
+            return Ok();
+        }
+
+        [HttpGet]
+        [Route("api/users/accept_gameinvite")]
+        public async Task<ActionResult> AcceptGameInvite(string challengerUserId, string userId)
+        {
+            var challenger = _usersDb.GetUser(challengerUserId);
+            var user = _usersDb.GetUser(userId);
+            // TODO: need gameid as well here in the gameinvite object
+
+            await _hubContext.Clients.Clients(challenger.ConnectionId, user.ConnectionId).SendAsync("AcceptGameInvite", "1");
 
             return Ok();
         }

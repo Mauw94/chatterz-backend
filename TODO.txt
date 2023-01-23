@@ -3,8 +3,14 @@
 * be able to invite/challenge someone to play a game (for now just 1v1)
     - right click on user and show context menu with options of games to play -> DONE
     - other player gets popup window with the invited
-        (send signalR request via API)
-    - when accepting the gamewindow opens
+        (send signalR request via API) _> DONE
+    - when accepting the gamewindow opens 
+
+    BUGS: 
+    * context menu is shown multiple  times
+    * code needs some refactoring
+    * users component not correctly updating when joining chatroom?
+    
 * create gameroom
 * be able to switch chat component to gameroom chat/chatroom chat
 * gameroom (max 2) and chatroom (max 5) are different
