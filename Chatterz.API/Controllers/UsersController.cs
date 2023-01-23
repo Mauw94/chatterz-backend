@@ -36,5 +36,16 @@ namespace Chatterz.API.Controllers
             var users = _usersDb.GetAll();
             return Ok(users);
         }
+
+        [HttpGet]
+        [Route("api/users/challenge")]
+        public async Task<ActionResult> Challenge(string userId, string inviteMessage)
+        {
+            var user = _usersDb.GetUser(userId);
+
+            await _hubContext.Clients.Client(user.ConnectionId).SendAsync("GameInvite", inviteMessage);
+
+            return Ok();
+        }
     }
 }
