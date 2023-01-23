@@ -7,10 +7,9 @@
     - when accepting the gamewindow opens 
 
     BUGS: 
-    * context menu is shown multiple  times
     * code needs some refactoring
     * users component not correctly updating when joining chatroom?
-    
+
 * create gameroom
 * be able to switch chat component to gameroom chat/chatroom chat
 * gameroom (max 2) and chatroom (max 5) are different
