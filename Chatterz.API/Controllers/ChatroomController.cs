@@ -33,7 +33,7 @@ namespace Chatterz.API.Controllers
         [Route("api/chatroom/create")]
         public async Task<ActionResult<int>> Create()
         {
-            var allChatrooms = await _chatroomService.GetAllAsync();
+            var allChatrooms = await _chatroomService.GetAllWithUsers();
             var id = await _chatroomService.AddChatroomAsync(new Chatroom());
             await _hubContext.Clients.All.SendAsync("RoomsUpdated", allChatrooms);
 
