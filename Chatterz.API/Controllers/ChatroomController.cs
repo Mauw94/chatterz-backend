@@ -14,7 +14,7 @@ namespace Chatterz.API.Controllers
         private readonly IHubContext<ChatHub> _hubContext;
         private readonly IUserService _userService;
         private readonly IChatroomService _chatroomService;
-        private IService<ChatMessage> _chatMessageService;
+        private readonly IService<ChatMessage> _chatMessageService;
 
 
         public ChatroomController(
@@ -33,10 +33,8 @@ namespace Chatterz.API.Controllers
         [Route("api/chatroom/create")]
         public async Task<ActionResult<int>> Create()
         {
-            // var roomId = Guid.NewGuid().ToString();
-            // _db.SaveChatroom(roomId);
             var allChatrooms = await _chatroomService.GetAllAsync();
-            var id = await _chatroomService.AddAsync(new Chatroom());
+            var id = await _chatroomService.AddChatroomAsync(new Chatroom());
             await _hubContext.Clients.All.SendAsync("RoomsUpdated", allChatrooms);
 
             return Ok(id);
@@ -48,7 +46,7 @@ namespace Chatterz.API.Controllers
         {
             var user = await _userService.GetAsync(dto.UserId);
             var oldChatroomId = user.ChatroomId.ToString();
-            var chatroom = await _chatroomService.GetAsync(dto.ChatroomId);
+            var chatroom = await _chatroomService.GetChatroomAsync(dto.ChatroomId);
             var allChatrooms = await _chatroomService.GetAllAsync();
 
             chatroom.Users.Add(user); // TODO: create better method for thsi
@@ -73,7 +71,7 @@ namespace Chatterz.API.Controllers
         [Route("api/chatroom/leave")]
         public async Task<ActionResult> Leave(ChatroomJoinDto dto)
         {
-            var chatroom = await _chatroomService.GetAsync(dto.ChatroomId);
+            var chatroom = await _chatroomService.GetChatroomAsync(dto.ChatroomId);
             var user = await _userService.GetAsync(dto.UserId);
             var allChatrooms = await _chatroomService.GetAllAsync();
             chatroom.Users.Remove(user);
@@ -120,7 +118,7 @@ namespace Chatterz.API.Controllers
         [Route("api/chatroom/users")]
         public async Task<ActionResult<List<User>>> GetConnectedUsers(int chatroomId)
         {
-            var chatroom = await _chatroomService.GetAsync(chatroomId);
+            var chatroom = await _chatroomService.GetChatroomAsync(chatroomId);
 
             return Ok(chatroom.Users);
         }

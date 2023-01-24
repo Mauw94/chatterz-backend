@@ -5,5 +5,10 @@ namespace Chatterz.Domain.Models
         public int Id { get; set; }
         public string Name { get; set; }
         public List<User> Users { get; set; }
+
+        public Chatroom()
+        {
+            Name = Guid.NewGuid().ToString();
+        }
     }
 }

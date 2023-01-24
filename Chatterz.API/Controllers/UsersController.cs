@@ -21,6 +21,20 @@ namespace Chatterz.API.Controllers
         }
 
         [HttpPost]
+        [Route("api/users/create")]
+        public async Task<ActionResult> Add(string username, string password)
+        {
+            var user = new User()
+            {
+                UserName = username,
+                Password = password
+            };
+
+            await _userService.AddAsync(user);
+            return Ok();
+        }
+
+        [HttpPost]
         [Route("api/users/change_username")]
         public async Task<ActionResult> ChangeUsername(ChangeUsernameDto dto)
         {

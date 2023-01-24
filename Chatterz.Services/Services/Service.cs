@@ -17,9 +17,9 @@ namespace Chatterz.Services.Services
             _repository = repository;
         }
 
-        public async Task<int> AddAsync(T entity)
+        public async Task AddAsync(T entity)
         {
-            return await _repository.AddAsync(entity);
+            await _repository.AddAsync(entity);
         }
 
         public async Task AddRangeAsync(IEnumerable<T> entities)

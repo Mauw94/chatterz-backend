@@ -152,7 +152,7 @@ namespace Chatterz.DataAccess.Repositories
         /// Add T item async.
         /// </summary>
         /// <param name="entity">Item to add.</param>
-        public virtual async Task<int> AddAsync(T entity)
+        public virtual async Task AddAsync(T entity)
         {
             if (entity == null)
                 throw new ArgumentNullException($"{nameof(AddAsync)} entity can not be null.");
@@ -160,7 +160,7 @@ namespace Chatterz.DataAccess.Repositories
             try
             {
                 await ApplicationDbContext.AddAsync(entity);
-                return await ApplicationDbContext.SaveChangesAsync();
+                await ApplicationDbContext.SaveChangesAsync();
             }
             catch (Exception ex)
             {

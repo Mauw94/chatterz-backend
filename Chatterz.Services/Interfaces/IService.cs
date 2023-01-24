@@ -15,7 +15,7 @@ namespace Chatterz.Services.Interfaces
         IEnumerable<T> GetAll(Expression<Func<T, bool>> expression);
         Task<IEnumerable<T>> GetAllAsync();
         Task<IEnumerable<T>> GetAllAsync(Expression<Func<T, bool>> expression);
-        Task<int> AddAsync(T entity);
+        Task AddAsync(T entity);
         Task UpdateAsync(T entity);
         Task RemoveAsync(T entity);
         Task RemoveAsync(int id);

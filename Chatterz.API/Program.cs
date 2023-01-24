@@ -25,7 +25,7 @@ namespace Chatterz.API
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<IChatroomRepository, ChatroomRepository>();
-            builder.Services.AddScoped<IUserRepository, UserRepository>();
+            builder.Services.AddScoped<IChatroomService, ChatroomService>();
 
             var app = builder.Build();
 

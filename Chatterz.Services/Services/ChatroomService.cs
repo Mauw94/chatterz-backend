@@ -13,5 +13,15 @@ namespace Chatterz.Services.Services
         {
             _chatroomRepo = chatroomRepo;
         }
+
+        public async Task<int> AddChatroomAsync(Chatroom chatroom)
+        {
+            return await _chatroomRepo.AddChatroomAsync(chatroom);
+        }
+
+        public async Task<Chatroom> GetChatroomAsync(int id)
+        {
+            return await _chatroomRepo.GetChatroomAsync(id);
+        }
     }
 }
