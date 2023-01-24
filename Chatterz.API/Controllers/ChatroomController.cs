@@ -29,6 +29,14 @@ namespace Chatterz.API.Controllers
             _chatMessageService = chatMessageService;
         }
 
+        [HttpDelete]
+        [Route("api/chat/remove")]
+        public async Task<ActionResult> Remove(int id)
+        {
+            await _chatroomService.RemoveChatroom(id);
+            return Ok();
+        }
+
         [HttpPost]
         [Route("api/chatroom/create")]
         public async Task<ActionResult<int>> Create()

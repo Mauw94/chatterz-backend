@@ -34,6 +34,11 @@ namespace Chatterz.Services.Services
             return await _chatroomRepo.GetChatroomAsync(id);
         }
 
+        public async Task RemoveChatroom(int id)
+        {
+            await _chatroomRepo.RemoveChatroom(id);
+        }
+
         public async Task<Chatroom> RemoveUserFromChatroom(int id, User user)
         {
             return await _chatroomRepo.RemoveUserFromChatroom(id, user);

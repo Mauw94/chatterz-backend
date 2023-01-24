@@ -70,5 +70,31 @@ namespace Chatterz.DataAccess.Repositories
 
             return chatrooms;
         }
+
+        public async Task RemoveChatroom(int id)
+        {
+            var chatroomToRemove = await ApplicationDbContext.Chatrooms
+                .FirstOrDefaultAsync(c => c.Id == id);
+
+            if (chatroomToRemove == null)
+                throw new ArgumentException("Could not find chatroom.");
+
+            var chatMessages = await ApplicationDbContext.ChatMessages
+                .Where(c => c.ChatroomId == id)
+                .ToListAsync();
+
+            var usersInChatroom = await ApplicationDbContext.Users
+                .Where(u => u.ChatroomId == id)
+                .ToListAsync();
+
+            foreach (var user in usersInChatroom)
+                user.ChatroomId = null;
+
+            ApplicationDbContext.ChatMessages.RemoveRange(chatMessages);
+            ApplicationDbContext.Users.UpdateRange(usersInChatroom);
+            ApplicationDbContext.Chatrooms.Remove(chatroomToRemove);
+
+            await ApplicationDbContext.SaveChangesAsync();
+        }
     }
 }

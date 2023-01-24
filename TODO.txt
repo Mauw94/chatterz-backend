@@ -1,5 +1,6 @@
+------ BUGS ------
+* joining/creating chatroom is still bugged on startup
 
-* delete a chatroom -> remove id from user; delete all chatmessages
 * toggle if chatroom is still active or not
 * create 1 service for chatroom/user service to combine joining/leaving logic
 * find better way to determine if we're in a chatroom
@@ -13,20 +14,16 @@
     - when accepting the gamewindow opens 
 
     BUGS: 
-    * code needs some refactoring
     * window.confirm is popping up twice
 
 * create gameroom
 * be able to switch chat component to gameroom chat/chatroom chat
 * gameroom (max 2) and chatroom (max 5) are different
 * allow people to spectate games?
-* challengde sonm to play
-* when creating a chatroom be able to give it a proper name and display instead of id
 * only admin users can add or remove a chatroom
 * show logging in icon when logging in
 * difference between public and private rooms
 * unit tests :> ): >:|
-* implement EF!!
 * send notification when one of ur friends comes online
 * implement auth with google gmail
 * create hostedservice to empty db and cache every x time

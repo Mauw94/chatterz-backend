@@ -28,5 +28,10 @@ namespace Chatterz.Services.Interfaces
         /// Get all chatrooms including users.
         /// </summary>
         Task<List<Chatroom>> GetAllWithUsers();
+
+        /// <summary>
+        /// Remove a chatroom.
+        /// </summary>
+        Task RemoveChatroom(int id);
     }
 }
