@@ -35,7 +35,6 @@ namespace Chatterz.API.Controllers
         {
             var allChatrooms = await _chatroomService.GetAllWithUsers();
             var id = await _chatroomService.AddChatroomAsync(new Chatroom());
-            await _hubContext.Clients.All.SendAsync("RoomsUpdated", allChatrooms);
 
             return Ok(id);
         }

@@ -1,5 +1,5 @@
 
-* Backend reword with EF!
+* delete a chatroom -> remove id from user; delete all chatmessages
 * toggle if chatroom is still active or not
 * create 1 service for chatroom/user service to combine joining/leaving logic
 * find better way to determine if we're in a chatroom
