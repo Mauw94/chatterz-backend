@@ -39,9 +39,12 @@ namespace Chatterz.DataAccess.Repositories
             if (chatroom == null)
                 throw new ArgumentException($"Could not find chatroom with id: ${id}");
 
-            chatroom.Users.Add(user);
-            ApplicationDbContext.Chatrooms.Update(chatroom);
-            await ApplicationDbContext.SaveChangesAsync();
+            if (!chatroom.Users.Contains(user))
+            {
+                chatroom.Users.Add(user);
+                ApplicationDbContext.Chatrooms.Update(chatroom);
+                await ApplicationDbContext.SaveChangesAsync();
+            }
 
             return chatroom;
         }
@@ -55,9 +58,12 @@ namespace Chatterz.DataAccess.Repositories
             if (chatroom == null)
                 throw new ArgumentException($"Could not find chatroom with id: ${id}");
 
-            chatroom.Users.Remove(user);
-            ApplicationDbContext.Chatrooms.Update(chatroom);
-            await ApplicationDbContext.SaveChangesAsync();
+            if (chatroom.Users.Contains(user))
+            {
+                chatroom.Users.Remove(user);
+                ApplicationDbContext.Chatrooms.Update(chatroom);
+                await ApplicationDbContext.SaveChangesAsync();
+            }
 
             return chatroom;
         }
