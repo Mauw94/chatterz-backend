@@ -46,10 +46,9 @@ namespace Chatterz.API.Controllers
         {
             var user = await _userService.GetAsync(dto.UserId);
             var oldChatroomId = user.ChatroomId.ToString();
-            var chatroom = await _chatroomService.GetChatroomAsync(dto.ChatroomId);
-            var allChatrooms = await _chatroomService.GetAllAsync();
+            var allChatrooms = await _chatroomService.GetAllWithUsers();
 
-            chatroom.Users.Add(user); // TODO: create better method for thsi
+            var chatroom = await _chatroomService.AddUserToChatroom(dto.ChatroomId, user);
 
             if (oldChatroomId != null)
             {
@@ -71,10 +70,9 @@ namespace Chatterz.API.Controllers
         [Route("api/chatroom/leave")]
         public async Task<ActionResult> Leave(ChatroomJoinDto dto)
         {
-            var chatroom = await _chatroomService.GetChatroomAsync(dto.ChatroomId);
             var user = await _userService.GetAsync(dto.UserId);
-            var allChatrooms = await _chatroomService.GetAllAsync();
-            chatroom.Users.Remove(user);
+            var allChatrooms = await _chatroomService.GetAllWithUsers();
+            var chatroom = await _chatroomService.RemoveUserFromChatroom(dto.ChatroomId, user);
 
             await _hubContext.Groups.RemoveFromGroupAsync(dto.ConnectionId, dto.ChatroomId.ToString());
             await _hubContext.Clients.Group(dto.ChatroomId.ToString())
@@ -90,7 +88,7 @@ namespace Chatterz.API.Controllers
         [Route("api/chatroom/all")]
         public async Task<ActionResult<List<Chatroom>>> GetAll()
         {
-            var allChatrooms = await _chatroomService.GetAllAsync();
+            var allChatrooms = await _chatroomService.GetAllWithUsers();
 
             return Ok(allChatrooms);
         }
