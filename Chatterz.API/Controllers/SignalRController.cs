@@ -47,8 +47,7 @@ namespace Chatterz.API.Controllers
         [Route("api/signalr/update")]
         public async Task<ActionResult> UpdateConnectionId(int userId, string connectionId)
         {
-            var user = await _userService.GetAsync(userId);
-            user.ConnectionId = connectionId;
+            await _userService.UpdateConnectionInfo(userId, connectionId);
 
             return Ok();
         }

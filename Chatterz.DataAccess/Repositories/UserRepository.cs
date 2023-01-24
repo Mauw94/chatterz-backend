@@ -17,5 +17,16 @@ namespace Chatterz.DataAccess.Repositories
 
             return user;
         }
+
+        public async Task UpdateConnectionInfo(int id, string connectionId)
+        {
+            var user = await ApplicationDbContext.Users
+                .FirstOrDefaultAsync(u => u.Id == id);
+
+            user.ConnectionId = connectionId;
+
+            ApplicationDbContext.Update(user);
+            await ApplicationDbContext.SaveChangesAsync();
+        }
     }
 }

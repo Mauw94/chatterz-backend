@@ -18,5 +18,10 @@ namespace Chatterz.Services.Services
         {
             return await _userRepo.Login(userName, password);
         }
+
+        public async Task UpdateConnectionInfo(int id, string connectionId)
+        {
+            await _userRepo.UpdateConnectionInfo(id, connectionId);
+        }
     }
 }
