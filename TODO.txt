@@ -1,5 +1,5 @@
 ------ BUGS ------
-* 
+* users list doesn't update when someone leaves
 
 ------ TODO ------
 
@@ -8,7 +8,7 @@
     - other player gets popup window with the invited
         (send signalR request via API) _> DONE
     - when accepting the gamewindow opens 
-    
+
 * toggle if chatroom is still active or not
 * create 1 service for chatroom/user service to combine joining/leaving logic
 * show scrollbar for chatrooms -> fixed width like chatMessages
