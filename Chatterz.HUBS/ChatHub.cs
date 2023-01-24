@@ -1,4 +1,4 @@
-﻿using Chatterz.Domain;
+﻿using Chatterz.Domain.Models;
 using Chatterz.HUBS.Interfaces;
 using Microsoft.AspNetCore.SignalR;
 
@@ -8,7 +8,7 @@ namespace Chatterz.HUBS
     {
         public async Task BroadcastAsync(ChatMessage message)
         {
-            await Clients.Group(message.ChatroomId).MessageReceivedFromHub(message);
+            await Clients.Group(message.ChatroomId.ToString()).MessageReceivedFromHub(message);
         }
     }
 }

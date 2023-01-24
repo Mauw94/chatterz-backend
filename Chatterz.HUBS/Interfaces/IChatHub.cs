@@ -1,4 +1,4 @@
-﻿using Chatterz.Domain;
+﻿using Chatterz.Domain.Models;
 
 namespace Chatterz.HUBS.Interfaces
 {

@@ -1,3 +1,8 @@
+
+* Backend reword with EF!
+* toggle if chatroom is still active or not
+* create 1 service for chatroom/user service to combine joining/leaving logic
+
 * show scrollbar for chatrooms -> fixed width like chatMessages
 * show scrollbar for gamerooms -> fixed width liek chatMessages
 * be able to invite/challenge someone to play a game (for now just 1v1)

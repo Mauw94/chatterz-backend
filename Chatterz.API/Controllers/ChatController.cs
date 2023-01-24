@@ -1,4 +1,4 @@
-﻿using Chatterz.Domain;
+﻿using Chatterz.Domain.Models;
 using Chatterz.HUBS;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;

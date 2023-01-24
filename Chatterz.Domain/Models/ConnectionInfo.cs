@@ -1,4 +1,4 @@
-namespace Chatterz.Domain
+namespace Chatterz.Domain.Models
 {
     public class ConnectionInfo
     {

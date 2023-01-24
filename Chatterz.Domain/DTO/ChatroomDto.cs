@@ -1,3 +1,5 @@
+using Chatterz.Domain.Models;
+
 namespace Chatterz.Domain.DTO
 {
     public class ChatroomDto

@@ -1,9 +1,10 @@
-using Chatterz.API.InMemoryDb;
-using Chatterz.Domain;
+using Chatterz.Domain.Models;
 using Chatterz.Domain.DTO;
 using Chatterz.HUBS;
+using Chatterz.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore;
 
 namespace Chatterz.API.Controllers
 {
@@ -11,43 +12,46 @@ namespace Chatterz.API.Controllers
     public class ChatroomController : ControllerBase
     {
         private readonly IHubContext<ChatHub> _hubContext;
-        private readonly IChatroomDb _db;
-        private readonly IUsersDb _usersDb;
+        private readonly IUserService _userService;
+        private readonly IChatroomService _chatroomService;
+        private IService<ChatMessage> _chatMessageService;
+
 
         public ChatroomController(
             IHubContext<ChatHub> hubContext,
-            IChatroomDb db,
-            IUsersDb usersDb)
+            IUserService userService,
+            IChatroomService chatroomService,
+            IService<ChatMessage> chatMessageService)
         {
             _hubContext = hubContext;
-            _db = db;
-            _usersDb = usersDb;
+            _userService = userService;
+            _chatroomService = chatroomService;
+            _chatMessageService = chatMessageService;
         }
 
         [HttpPost]
         [Route("api/chatroom/create")]
-        public async Task<ActionResult<string>> Create()
+        public async Task<ActionResult<int>> Create()
         {
-            var roomId = Guid.NewGuid().ToString();
-            _db.SaveChatroom(roomId);
-            await _hubContext.Clients.All.SendAsync("RoomsUpdated", GetAllChatrooms());
+            // var roomId = Guid.NewGuid().ToString();
+            // _db.SaveChatroom(roomId);
+            var allChatrooms = await _chatroomService.GetAllAsync();
+            var id = await _chatroomService.AddAsync(new Chatroom());
+            await _hubContext.Clients.All.SendAsync("RoomsUpdated", allChatrooms);
 
-            return Ok(roomId);
+            return Ok(id);
         }
 
         [HttpPost]
         [Route("api/chatroom/join")]
         public async Task<ActionResult> Join(ChatroomJoinDto dto)
         {
-            var oldChatroomId = _db.Join(dto.ChatroomId, dto.UserId);
-            var user = _usersDb.GetUser(dto.UserId);
-            var userIds = _db.ConnectedUsers(dto.ChatroomId);
-            var users = new List<User>(); // TODO new dto for this
-            foreach (var id in userIds) // TODO: when i finally implement EF this will not be so shit
-            {
-                var u = _usersDb.GetUser(id);
-                users.Add(u);
-            }
+            var user = await _userService.GetAsync(dto.UserId);
+            var oldChatroomId = user.ChatroomId.ToString();
+            var chatroom = await _chatroomService.GetAsync(dto.ChatroomId);
+            var allChatrooms = await _chatroomService.GetAllAsync();
+
+            chatroom.Users.Add(user); // TODO: create better method for thsi
 
             if (oldChatroomId != null)
             {
@@ -55,10 +59,12 @@ namespace Chatterz.API.Controllers
                 await _hubContext.Clients.Group(oldChatroomId).SendAsync("UserDisconnected", user.UserName);
             }
 
-            await _hubContext.Groups.AddToGroupAsync(dto.ConnectionId, dto.ChatroomId);
-            await _hubContext.Clients.Group(dto.ChatroomId).SendAsync("UserConnected", user.UserName);
-            await _hubContext.Clients.Group(dto.ChatroomId).SendAsync("UpdateUsersList", users);
-            await _hubContext.Clients.All.SendAsync("RoomsUpdated", GetAllChatrooms());
+            await _hubContext.Groups.AddToGroupAsync(dto.ConnectionId, dto.ChatroomId.ToString());
+            await _hubContext.Clients.Group(dto.ChatroomId.ToString())
+                .SendAsync("UserConnected", user.UserName);
+            await _hubContext.Clients.Group(dto.ChatroomId.ToString())
+                .SendAsync("UpdateUsersList", chatroom.Users);
+            await _hubContext.Clients.All.SendAsync("RoomsUpdated", allChatrooms);
 
             return Ok();
         }
@@ -67,98 +73,57 @@ namespace Chatterz.API.Controllers
         [Route("api/chatroom/leave")]
         public async Task<ActionResult> Leave(ChatroomJoinDto dto)
         {
-            _db.Leave(dto.ChatroomId, dto.UserId);
+            var chatroom = await _chatroomService.GetAsync(dto.ChatroomId);
+            var user = await _userService.GetAsync(dto.UserId);
+            var allChatrooms = await _chatroomService.GetAllAsync();
+            chatroom.Users.Remove(user);
 
-            var userIds = _db.ConnectedUsers(dto.ChatroomId);
-            var users = new List<User>(); // TODO new dto for this
-            foreach (var id in userIds) // TODO: when i finally implement EF this will not be so shit
-            {
-                var u = _usersDb.GetUser(id);
-                users.Add(u);
-            }
-
-            var user = _usersDb.GetUser(dto.UserId);
-            await _hubContext.Groups.RemoveFromGroupAsync(dto.ConnectionId, dto.ChatroomId);
-            await _hubContext.Clients.Group(dto.ChatroomId).SendAsync("UserDisconnected", user.UserName);
-            await _hubContext.Clients.Group(dto.ChatroomId).SendAsync("UpdateUsersList", users);
-            await _hubContext.Clients.All.SendAsync("RoomsUpdated", GetAllChatrooms());
+            await _hubContext.Groups.RemoveFromGroupAsync(dto.ConnectionId, dto.ChatroomId.ToString());
+            await _hubContext.Clients.Group(dto.ChatroomId.ToString())
+                .SendAsync("UserDisconnected", user.UserName);
+            await _hubContext.Clients.Group(dto.ChatroomId.ToString())
+                .SendAsync("UpdateUsersList", chatroom.Users);
+            await _hubContext.Clients.All.SendAsync("RoomsUpdated", allChatrooms);
 
             return Ok();
         }
 
         [HttpGet]
         [Route("api/chatroom/all")]
-        public ActionResult<List<ChatroomDto>> GetAll()
+        public async Task<ActionResult<List<Chatroom>>> GetAll()
         {
-            var chatrooms = GetAllChatrooms();
+            var allChatrooms = await _chatroomService.GetAllAsync();
 
-            return Ok(chatrooms);
+            return Ok(allChatrooms);
         }
 
         [HttpPost]
         [Route("api/chatroom/send")]
-        public ActionResult Send(ChatMessage chatMessage)
+        public async Task<ActionResult> Send(ChatMessage chatMessage)
         {
-            if (!_db.SaveChat(chatMessage))
-                return BadRequest($"Couldn't save chatroom {chatMessage.ChatroomId}");
-
+            await _chatMessageService.AddAsync(chatMessage);
             return Ok();
         }
 
         [HttpGet]
         [Route("api/chatroom/history")]
-        public ActionResult<List<ChatMessage>> GetChatHistory(string chatroomId)
+        public async Task<ActionResult<List<ChatMessage>>> GetChatHistory(int chatroomId)
         {
-            return Ok(_db.GetChatHistory(chatroomId));
+            var chatMessages = await _chatMessageService
+                .GetAllAsQueryable(c => c.ChatroomId == chatroomId)
+                .ToListAsync();
+
+            return Ok(chatMessages);
         }
 
         [HttpGet]
         [Route("api/chatroom/users")]
-        public ActionResult<List<User>> GetConnectedUsers(string chatroomId)
+        public async Task<ActionResult<List<User>>> GetConnectedUsers(int chatroomId)
         {
-            var userIds = _db.ConnectedUsers(chatroomId);
-            var users = new List<User>();
+            var chatroom = await _chatroomService.GetAsync(chatroomId);
 
-            foreach (var id in userIds)
-            {
-                var user = _usersDb.GetUser(id);
-                users.Add(user);
-            }
-
-            return Ok(users);
+            return Ok(chatroom.Users);
         }
 
-        private List<ChatroomDto> GetAllChatrooms()
-        {
-            var chatrooms = _db.GetAllChatrooms();
-            if (chatrooms == null)
-                return null;
-
-            var dtos = new List<ChatroomDto>();
-
-            foreach (var chatroom in chatrooms)
-            {
-                var users = new List<User>();
-
-                if (chatroom.Value.Any())
-                {
-                    foreach (var userId in chatroom.Value)
-                    {
-                        users.Add(_usersDb.GetUser(userId));
-                    }
-                }
-
-                dtos.Add
-                (
-                    new ChatroomDto
-                    {
-                        Id = chatroom.Key,
-                        Users = users
-                    }
-                );
-            }
-
-            return dtos;
-        }
     }
 }

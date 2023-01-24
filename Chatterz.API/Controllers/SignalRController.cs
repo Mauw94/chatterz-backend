@@ -1,6 +1,6 @@
-using Chatterz.API.InMemoryDb;
 using Chatterz.Domain.DTO;
 using Chatterz.HUBS;
+using Chatterz.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 
@@ -10,37 +10,44 @@ namespace Chatterz.API.Controllers
     public class SignalRController : ControllerBase
     {
         private IHubContext<ChatHub> _hubContext;
-        private IChatroomDb _chatroomDb;
-        private IUsersDb _usersDb;
+        private readonly IUserService _userService;
+        private readonly IChatroomService _chatroomService;
 
-        public SignalRController(IHubContext<ChatHub> hubContext, IChatroomDb chatroomDb, IUsersDb usersDb)
+        public SignalRController(
+            IHubContext<ChatHub> hubContext,
+            IUserService userService,
+            IChatroomService chatroomService
+            )
         {
             _hubContext = hubContext;
-            _chatroomDb = chatroomDb;
-            _usersDb = usersDb;
+            _userService = userService;
+            _chatroomService = chatroomService;
         }
 
         [HttpPost]
         [Route("api/signalr/connect")]
         public async Task<ActionResult> Connect(ChatroomJoinDto dto)
         {
-            var oldchatroomId = _chatroomDb.Join(dto.ChatroomId, dto.UserId);
+            var user = await _userService.GetAsync(dto.UserId);
+            var chatroom = await _chatroomService.GetAsync(dto.ChatroomId);
+            var oldchatroomId = user.ChatroomId.ToString();
+            chatroom.Users.Add(user);
 
             if (oldchatroomId != null)
                 await _hubContext.Groups.RemoveFromGroupAsync(dto.ConnectionId, oldchatroomId);
 
-            await _hubContext.Groups.AddToGroupAsync(dto.ConnectionId, dto.ChatroomId);
-            await _hubContext.Clients.Group(dto.ChatroomId).SendAsync("UserConnected", dto.ConnectionId);
-
+            await _hubContext.Groups.AddToGroupAsync(dto.ConnectionId, dto.ChatroomId.ToString());
+            await _hubContext.Clients.Group(dto.ChatroomId.ToString())
+                .SendAsync("UserConnected", dto.ConnectionId);
 
             return Ok();
         }
 
         [HttpGet]
         [Route("api/signalr/update")]
-        public ActionResult UpdateConnectionId(string userId, string connectionId)
+        public async Task<ActionResult> UpdateConnectionId(int userId, string connectionId)
         {
-            var user = _usersDb.GetUser(userId);
+            var user = await _userService.GetAsync(userId);
             user.ConnectionId = connectionId;
 
             return Ok();

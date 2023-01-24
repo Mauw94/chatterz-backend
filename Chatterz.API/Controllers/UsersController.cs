@@ -1,7 +1,8 @@
-using Chatterz.API.InMemoryDb;
 using Chatterz.Domain;
 using Chatterz.Domain.DTO;
+using Chatterz.Domain.Models;
 using Chatterz.HUBS;
+using Chatterz.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 
@@ -10,48 +11,52 @@ namespace Chatterz.API.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
-        private IUsersDb _usersDb;
         private IHubContext<ChatHub> _hubContext;
+        private IUserService _userService;
 
-        public UsersController(IUsersDb usersDb, IHubContext<ChatHub> hubContext)
+        public UsersController(IHubContext<ChatHub> hubContext, IUserService userService)
         {
-            _usersDb = usersDb;
             _hubContext = hubContext;
+            _userService = userService;
         }
 
         [HttpPost]
         [Route("api/users/change_username")]
         public async Task<ActionResult> ChangeUsername(ChangeUsernameDto dto)
         {
-            _usersDb.ChangeUsername(dto.NewUsername, dto.UserId);
-            await _hubContext.Clients.Group(dto.ChatroomId).SendAsync("UsernameUpdated", dto);
+            var user = await _userService.GetAsync(dto.UserId);
+            user.UserName = dto.NewUsername;
+
+            await _hubContext.Clients.Group(dto.ChatroomId.ToString())
+                .SendAsync("UsernameUpdated", dto);
 
             return Ok();
         }
 
         [HttpGet]
         [Route("api/users/all")]
-        public ActionResult<List<User>> GetAll()
+        public async Task<ActionResult<List<User>>> GetAll()
         {
-            var users = _usersDb.GetAll();
+            var users = await _userService.GetAllAsync();
             return Ok(users);
         }
 
         [HttpGet]
         [Route("api/users/challenge")]
-        public async Task<ActionResult> Challenge(string challengerUserId, string userId, string inviteMessage, int gameId)
+        public async Task<ActionResult> Challenge(int challengerUserId, int userId, string inviteMessage, int gameId)
         {
-            var user = _usersDb.GetUser(userId);
-            var challenger = _usersDb.GetUser(challengerUserId);
+            var user = await _userService.GetAsync(userId);
+            var challenger = await _userService.GetAsync(challengerUserId);
 
-            var gameInviteDto = new GameInviteDto()
+            var gameInviteDto = new GameInviteDto() // TODO: this dto needs rework
             {
                 Challenger = challenger,
                 InviteMessage = challenger.UserName + " " + inviteMessage,
                 GameId = gameId
             };
 
-            await _hubContext.Clients.Client(user.ConnectionId).SendAsync("GameInvite", gameInviteDto);
+            await _hubContext.Clients.Client(user.ConnectionId)
+                .SendAsync("GameInvite", gameInviteDto);
 
             return Ok();
         }
@@ -60,8 +65,8 @@ namespace Chatterz.API.Controllers
         [Route("api/users/accept_gameinvite")]
         public async Task<ActionResult> AcceptGameInvite(GameInviteDto gameInvite)
         {
-            var challenger = _usersDb.GetUser(gameInvite.Challenger.Id);
-            var user = _usersDb.GetUser(gameInvite.UserId);
+            var user = await _userService.GetAsync(gameInvite.UserId);
+            var challenger = await _userService.GetAsync(gameInvite.Challenger.Id);
 
             await _hubContext.Clients
                 .Clients(challenger.ConnectionId, user.ConnectionId)

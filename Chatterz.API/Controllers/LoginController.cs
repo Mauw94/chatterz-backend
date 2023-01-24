@@ -1,33 +1,25 @@
-using Chatterz.API.InMemoryDb;
-using Chatterz.Domain;
+using Chatterz.Domain.Models;
 using Chatterz.Domain.DTO;
 using Microsoft.AspNetCore.Mvc;
+using Chatterz.Services.Interfaces;
 
 namespace Chatterz.API.Controllers
 {
-    // TODO: temp login functionality
     [ApiController]
     public class LoginController : ControllerBase
     {
-        private IUsersDb _usersDb;
+        private IUserService _userService;
 
-        public LoginController(IUsersDb usersDb)
+        public LoginController(IUserService userService)
         {
-            _usersDb = usersDb;
-        }
-
-        [HttpGet]
-        [Route("api/login/new")] // test/debug method
-        public ActionResult<User> FetchTestUser()
-        {
-            return Ok(_usersDb.FetchTestUser());
+            _userService = userService;
         }
 
         [HttpPost]
         [Route("api/login/login")]
-        public ActionResult<User> Login(UserLoginDto userLogin)
+        public async Task<ActionResult<User>> Login(UserLoginDto userLogin)
         {
-            var user = _usersDb.Login(userLogin.UserName, userLogin.Password);
+            var user = await _userService.Login(userLogin.UserName, userLogin.Password);
             if (user == null)
                 return BadRequest("Login credentials do not match.");
 
@@ -36,13 +28,13 @@ namespace Chatterz.API.Controllers
 
         [HttpPost]
         [Route("api/login/create")]
-        public ActionResult<string> CreateTempUser(UserLoginDto userLogin)
+        public async Task<ActionResult<int>> CreateTempUser(UserLoginDto userLogin)
         {
             var user = new User();
             user.UserName = userLogin.UserName;
             user.Password = userLogin.Password;
 
-            _usersDb.SaveUser(user);
+            await _userService.AddAsync(user);
 
             return Ok(user.Id);
         }

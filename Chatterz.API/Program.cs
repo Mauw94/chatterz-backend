@@ -1,5 +1,10 @@
-using Chatterz.API.InMemoryDb;
+using Chatterz.DataAccess;
+using Chatterz.DataAccess.Interfaces;
+using Chatterz.DataAccess.Repositories;
 using Chatterz.HUBS;
+using Chatterz.Services.Interfaces;
+using Chatterz.Services.Services;
+using Microsoft.EntityFrameworkCore;
 
 namespace Chatterz.API
 {
@@ -8,16 +13,19 @@ namespace Chatterz.API
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-
-            // Add services to the container.
+            var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
             builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
             builder.Services.AddSignalR().AddMessagePackProtocol();
-            builder.Services.AddSingleton(typeof(IChatroomDb), typeof(ChatroomDb));
-            builder.Services.AddSingleton<IUsersDb, UsersDb>();
+            builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString));
+            builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+            builder.Services.AddScoped(typeof(IService<>), typeof(Service<>));
+            builder.Services.AddScoped<IUserRepository, UserRepository>();
+            builder.Services.AddScoped<IUserService, UserService>();
+            builder.Services.AddScoped<IChatroomRepository, ChatroomRepository>();
+            builder.Services.AddScoped<IUserRepository, UserRepository>();
 
             var app = builder.Build();
 

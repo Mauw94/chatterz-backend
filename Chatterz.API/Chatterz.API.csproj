@@ -9,11 +9,18 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Core" Version="1.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Protocols.MessagePack" Version="7.0.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.2">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Chatterz.DataAccess\Chatterz.DataAccess.csproj" />
     <ProjectReference Include="..\Chatterz.HUBS\Chatterz.HUBS.csproj" />
+    <ProjectReference Include="..\Chatterz.Services\Chatterz.Services.csproj" />
   </ItemGroup>
 
 </Project>
