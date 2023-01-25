@@ -18,6 +18,19 @@ namespace Chatterz.DataAccess.Repositories
             return user;
         }
 
+        public async Task Logout(int userId)
+        {
+            var user = await ApplicationDbContext.Users
+                .FirstOrDefaultAsync(u => u.Id == userId);
+
+            if (user == null)
+                throw new ArgumentException($"No user with id {userId}");
+
+            user.ChatroomId = null;
+            ApplicationDbContext.Users.Update(user);
+            await ApplicationDbContext.SaveChangesAsync();
+        }
+
         public async Task UpdateConnectionInfo(int id, string connectionId)
         {
             var user = await ApplicationDbContext.Users

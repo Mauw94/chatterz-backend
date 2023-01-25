@@ -38,5 +38,14 @@ namespace Chatterz.API.Controllers
 
             return Ok(user.Id);
         }
+
+        [HttpPost]
+        [Route("api/login/logout")]
+        public async Task<ActionResult> Logout(int userId)
+        {
+            await _userService.Logout(userId);
+
+            return Ok();
+        }
     }
 }

@@ -23,5 +23,10 @@ namespace Chatterz.Services.Services
         {
             await _userRepo.UpdateConnectionInfo(id, connectionId);
         }
+
+        public async Task Logout(int userId)
+        {
+            await _userRepo.Logout(userId);
+        }
     }
 }

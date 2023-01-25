@@ -51,23 +51,27 @@ namespace Chatterz.API.Controllers
         [Route("api/chatroom/join")]
         public async Task<ActionResult> Join(ChatroomJoinDto dto)
         {
+            // TODO: this is too much login in 1 controller method -> pls fix.
             var user = await _userService.GetAsync(dto.UserId);
-            var oldChatroomId = user.ChatroomId.ToString();
-            var allChatrooms = await _chatroomService.GetAllWithUsers();
-
+            var oldChatroomId = user.ChatroomId;
             var chatroom = await _chatroomService.AddUserToChatroom(dto.ChatroomId, user);
 
-            if (oldChatroomId != null)
+            if (oldChatroomId != null && oldChatroomId != dto.ChatroomId)
             {
-                await _hubContext.Groups.RemoveFromGroupAsync(dto.ConnectionId, oldChatroomId);
-                await _hubContext.Clients.Group(oldChatroomId).SendAsync("UserDisconnected", user.UserName);
+                await _chatroomService.RemoveUserFromChatroom((int)oldChatroomId, user);
+                await _hubContext.Clients.Group(oldChatroomId.Value.ToString()).SendAsync("UserDisconnected", user.UserName);
+                await _hubContext.Clients.Group(oldChatroomId.Value.ToString())
+                    .SendAsync("UpdateUsersList", chatroom.Users);
             }
+
+            var allChatrooms = await _chatroomService.GetAllWithUsers();
 
             await _hubContext.Groups.AddToGroupAsync(dto.ConnectionId, dto.ChatroomId.ToString());
             await _hubContext.Clients.Group(dto.ChatroomId.ToString())
                 .SendAsync("UserConnected", user.UserName);
             await _hubContext.Clients.Group(dto.ChatroomId.ToString())
                 .SendAsync("UpdateUsersList", chatroom.Users);
+
             await _hubContext.Clients.All.SendAsync("RoomsUpdated", allChatrooms);
 
             return Ok();

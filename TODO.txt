@@ -1,5 +1,6 @@
 ------ BUGS ------
 * users list doesn't update when someone leaves
+* when user is logged out, user can't be in a chatroom anymore
 
 ------ TODO ------
 
@@ -9,6 +10,8 @@
         (send signalR request via API) _> DONE
     - when accepting the gamewindow opens 
 
+* set login flag in user table in db
+* redo login/auth in a proper way
 * toggle if chatroom is still active or not
 * create 1 service for chatroom/user service to combine joining/leaving logic
 * show scrollbar for chatrooms -> fixed width like chatMessages
