@@ -7,25 +7,28 @@ namespace Chatterz.API.Controllers.GameControllers
     [ApiController]
     public class WordGuesserController : ControllerBase
     {
-        private readonly IWordGuesserService _service;
+        private readonly IWordGuesserService _gameService;
 
         public WordGuesserController(IWordGuesserService service)
         {
-            _service = service;
+            _gameService = service;
         }
 
         [HttpGet]
         [Route("api/game/wordguesser/start")]
-        public async Task StartNew(List<User> players)
+        public async Task<ActionResult<WordGuesser>> StartNew(List<User> players)
         {
-            // TODO: need gamemanager to handle logic 
-            // and to initialize a game
             var game = new WordGuesser();
+
             foreach (var player in players)
                 game.AddPlayer(player);
-            // game.GenerateRandomWord()
-            // game.DecideFirstTurn()
-            // game.Start()
+
+            game.WordToGuess = _gameService.GenerateRandomWord(5);
+            game.PlayerToStart = _gameService.DetermineFirstTurn(game.Players.Select(p => p.Id));
+
+            await _gameService.Start(game);
+
+            return Ok(game);
         }
     }
 }

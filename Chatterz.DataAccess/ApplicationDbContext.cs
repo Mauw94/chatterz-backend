@@ -10,5 +10,6 @@ namespace Chatterz.DataAccess
         public DbSet<User> Users { get; set; }
         public DbSet<Chatroom> Chatrooms { get; set; }
         public DbSet<ChatMessage> ChatMessages { get; set; }
+        public DbSet<WordGuesser> WordGuessers { get; set; }
     }
 }

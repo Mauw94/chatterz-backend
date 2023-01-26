@@ -11,6 +11,7 @@ namespace Chatterz.Domain.Models
         public bool IsGameStarted { get; set; } = false;
         public bool IsGameOver { get; set; } = false;
         public int WinnerId { get; set; }
+        public int PlayerToStart { get; set; }
 
         public Game()
         {

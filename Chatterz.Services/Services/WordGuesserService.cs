@@ -14,5 +14,30 @@ namespace Chatterz.Services.Services
             _wordGuesserRepository = wordGuesserRepository;
         }
 
+        public string GenerateRandomWord(int wordLength)
+        {
+            var word = string.Empty;
+            var abc = "abcdefghijklmnopqrstuvwxyz";
+            var random = new Random();
+
+            for (int i = 0; i < wordLength; i++)
+            {
+                var rnd = random.Next(0, abc.Length);
+                word += abc[rnd];
+            }
+
+            return word;
+        }
+
+        public int DetermineFirstTurn(IEnumerable<int> userIds)
+        {
+            var rnd = new Random().Next(0, userIds.Count() - 1);
+            return userIds.ToArray()[rnd];
+        }
+
+        public async Task Start(WordGuesser game)
+        {
+            await _wordGuesserRepository.Start(game);
+        }
     }
 }
