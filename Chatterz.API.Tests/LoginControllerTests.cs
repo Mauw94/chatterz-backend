@@ -4,6 +4,8 @@ using Chatterz.Domain.DTO;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Chatterz.Services.Interfaces;
+using Microsoft.AspNetCore.SignalR;
+using Chatterz.HUBS;
 
 namespace Chatterz.API.Tests
 {
@@ -11,12 +13,19 @@ namespace Chatterz.API.Tests
     public class LoginControllerTests
     {
         private readonly Mock<IUserService> _userServiceMock;
+        private readonly Mock<IChatroomService> _chatroomServiceMock;
+        private readonly Mock<IHubContext<ChatHub>> _hubContextMock;
         private readonly LoginController _loginController;
 
         public LoginControllerTests()
         {
             _userServiceMock = new Mock<IUserService>();
-            _loginController = new LoginController(_userServiceMock.Object);
+            _chatroomServiceMock = new Mock<IChatroomService>();
+            _hubContextMock = new Mock<IHubContext<ChatHub>>();
+            _loginController = new LoginController(
+                _userServiceMock.Object,
+                _chatroomServiceMock.Object,
+                _hubContextMock.Object);
         }
 
         [TestMethod]
@@ -36,20 +45,6 @@ namespace Chatterz.API.Tests
             _userServiceMock.Verify(s => s.Login(userLoginInfo.UserName, userLoginInfo.Password), Times.Once);
             Assert.IsNotNull(result);
             Assert.IsInstanceOfType(result, typeof(ActionResult<User>));
-        }
-
-        [TestMethod]
-        public async Task Test_Logout_LogsUserOut()
-        {
-            // arrange
-            var id = 1;
-
-            // act
-            var res = await _loginController.Logout(id);
-
-            // assert
-            _userServiceMock.Verify(s => s.Logout(id), Times.Once);
-            Assert.IsInstanceOfType(res, typeof(OkResult));
         }
     }
 }

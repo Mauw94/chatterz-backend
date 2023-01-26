@@ -1,5 +1,4 @@
 ------ BUGS ------
-* users list doesn't update when someone leaves
 * when user is logged out, user can't be in a chatroom anymore
 
 ------ TODO ------

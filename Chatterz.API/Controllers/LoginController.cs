@@ -2,17 +2,26 @@ using Chatterz.Domain.Models;
 using Chatterz.Domain.DTO;
 using Microsoft.AspNetCore.Mvc;
 using Chatterz.Services.Interfaces;
+using Microsoft.AspNetCore.SignalR;
+using Chatterz.HUBS;
 
 namespace Chatterz.API.Controllers
 {
     [ApiController]
     public class LoginController : ControllerBase
     {
-        private IUserService _userService;
+        private readonly IUserService _userService;
+        private readonly IChatroomService _chatroomService;
+        private readonly IHubContext<ChatHub> _hubContext;
 
-        public LoginController(IUserService userService)
+        public LoginController(
+            IUserService userService,
+            IChatroomService chatroomService,
+            IHubContext<ChatHub> hubContext)
         {
             _userService = userService;
+            _hubContext = hubContext;
+            _chatroomService = chatroomService;
         }
 
         [HttpPost]
@@ -41,9 +50,22 @@ namespace Chatterz.API.Controllers
 
         [HttpPost]
         [Route("api/login/logout")]
-        public async Task<ActionResult> Logout(int userId)
+        public async Task<ActionResult> Logout(int userId, string connectionId, int chatroomId)
         {
-            await _userService.Logout(userId);
+            var user = await _userService.Logout(userId);
+
+            // TODO: actually should only have to update 1 chatroom here and not retrieve all again.
+            var chatroom = await _chatroomService.GetAsync(chatroomId);
+            var allChatrooms = await _chatroomService.GetAllWithUsers();
+
+            await _hubContext.Clients.Group(chatroomId.ToString())
+                .SendAsync("UserDisconnected", user.UserName);
+            await _hubContext.Groups
+                .RemoveFromGroupAsync(connectionId, chatroomId.ToString());
+            await _hubContext.Clients.Group(chatroomId.ToString())
+                .SendAsync("UpdateUsersList", chatroom.Users);
+            await _hubContext.Clients.All
+                .SendAsync("RoomsUpdated", allChatrooms);
 
             return Ok();
         }

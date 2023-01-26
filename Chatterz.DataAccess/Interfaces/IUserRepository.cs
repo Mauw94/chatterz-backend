@@ -12,7 +12,7 @@ namespace Chatterz.DataAccess.Interfaces
         /// <summary>
         /// Logout user.
         /// </summary>
-        Task Logout(int userId);
+        Task<User> Logout(int userId);
 
         /// <summary>
         /// Update user connection id when signalR connection is established.

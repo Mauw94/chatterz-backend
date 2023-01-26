@@ -18,7 +18,7 @@ namespace Chatterz.DataAccess.Repositories
             return user;
         }
 
-        public async Task Logout(int userId)
+        public async Task<User> Logout(int userId)
         {
             var user = await ApplicationDbContext.Users
                 .FirstOrDefaultAsync(u => u.Id == userId);
@@ -29,6 +29,8 @@ namespace Chatterz.DataAccess.Repositories
             user.ChatroomId = null;
             ApplicationDbContext.Users.Update(user);
             await ApplicationDbContext.SaveChangesAsync();
+
+            return user;
         }
 
         public async Task UpdateConnectionInfo(int id, string connectionId)
