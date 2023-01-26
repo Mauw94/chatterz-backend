@@ -1,5 +1,4 @@
 ------ BUGS ------
-* when user is logged out, user can't be in a chatroom anymore
 
 ------ TODO ------
 

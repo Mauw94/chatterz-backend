@@ -28,6 +28,8 @@ namespace Chatterz.API
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<IChatroomRepository, ChatroomRepository>();
             builder.Services.AddScoped<IChatroomService, ChatroomService>();
+            builder.Services.AddScoped<IWordGuesserRepository, WordGuesserRepository>();
+            builder.Services.AddScoped<IWordGuesserService, WordGuesserService>();
             builder.Services.AddScoped<ISignalRManager, SignalRManager>();
 
             var app = builder.Build();
