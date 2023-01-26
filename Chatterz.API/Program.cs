@@ -1,3 +1,5 @@
+using Chatterz.API.Manages.Interfaces;
+using Chatterz.API.Manages.Managers;
 using Chatterz.DataAccess;
 using Chatterz.DataAccess.Interfaces;
 using Chatterz.DataAccess.Repositories;
@@ -26,6 +28,7 @@ namespace Chatterz.API
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<IChatroomRepository, ChatroomRepository>();
             builder.Services.AddScoped<IChatroomService, ChatroomService>();
+            builder.Services.AddScoped<ISignalRManager, SignalRManager>();
 
             var app = builder.Build();
 

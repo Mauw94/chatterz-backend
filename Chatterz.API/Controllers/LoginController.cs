@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Chatterz.Services.Interfaces;
 using Microsoft.AspNetCore.SignalR;
 using Chatterz.HUBS;
+using Chatterz.API.Manages.Interfaces;
 
 namespace Chatterz.API.Controllers
 {
@@ -11,17 +12,15 @@ namespace Chatterz.API.Controllers
     public class LoginController : ControllerBase
     {
         private readonly IUserService _userService;
-        private readonly IChatroomService _chatroomService;
-        private readonly IHubContext<ChatHub> _hubContext;
+        private readonly ISignalRManager _signalRManager;
+
 
         public LoginController(
             IUserService userService,
-            IChatroomService chatroomService,
-            IHubContext<ChatHub> hubContext)
+            ISignalRManager signalRManager)
         {
             _userService = userService;
-            _hubContext = hubContext;
-            _chatroomService = chatroomService;
+            _signalRManager = signalRManager;
         }
 
         [HttpPost]
@@ -54,18 +53,7 @@ namespace Chatterz.API.Controllers
         {
             var user = await _userService.Logout(userId);
 
-            // TODO: actually should only have to update 1 chatroom here and not retrieve all again.
-            var chatroom = await _chatroomService.GetAsync(chatroomId);
-            var allChatrooms = await _chatroomService.GetAllWithUsers();
-
-            await _hubContext.Clients.Group(chatroomId.ToString())
-                .SendAsync("UserDisconnected", user.UserName);
-            await _hubContext.Groups
-                .RemoveFromGroupAsync(connectionId, chatroomId.ToString());
-            await _hubContext.Clients.Group(chatroomId.ToString())
-                .SendAsync("UpdateUsersList", chatroom.Users);
-            await _hubContext.Clients.All
-                .SendAsync("RoomsUpdated", allChatrooms);
+            await _signalRManager.UpdateChatroomsOnUserLeave(user, chatroomId, connectionId);
 
             return Ok();
         }

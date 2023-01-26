@@ -5,6 +5,7 @@ using Chatterz.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
+using Chatterz.API.Manages.Interfaces;
 
 namespace Chatterz.API.Controllers
 {
@@ -14,6 +15,7 @@ namespace Chatterz.API.Controllers
         private readonly IHubContext<ChatHub> _hubContext;
         private readonly IUserService _userService;
         private readonly IChatroomService _chatroomService;
+        private readonly ISignalRManager _signalRManager;
         private readonly IService<ChatMessage> _chatMessageService;
 
 
@@ -21,11 +23,13 @@ namespace Chatterz.API.Controllers
             IHubContext<ChatHub> hubContext,
             IUserService userService,
             IChatroomService chatroomService,
+            ISignalRManager signalRManager,
             IService<ChatMessage> chatMessageService)
         {
             _hubContext = hubContext;
             _userService = userService;
             _chatroomService = chatroomService;
+            _signalRManager = signalRManager;
             _chatMessageService = chatMessageService;
         }
 
@@ -51,28 +55,8 @@ namespace Chatterz.API.Controllers
         [Route("api/chatroom/join")]
         public async Task<ActionResult> Join(ChatroomJoinDto dto)
         {
-            // TODO: this is too much login in 1 controller method -> pls fix.
             var user = await _userService.GetAsync(dto.UserId);
-            var oldChatroomId = user.ChatroomId;
-            var chatroom = await _chatroomService.AddUserToChatroom(dto.ChatroomId, user);
-
-            if (oldChatroomId != null && oldChatroomId != dto.ChatroomId)
-            {
-                await _chatroomService.RemoveUserFromChatroom((int)oldChatroomId, user);
-                await _hubContext.Clients.Group(oldChatroomId.Value.ToString()).SendAsync("UserDisconnected", user.UserName);
-                await _hubContext.Clients.Group(oldChatroomId.Value.ToString())
-                    .SendAsync("UpdateUsersList", chatroom.Users);
-            }
-
-            var allChatrooms = await _chatroomService.GetAllWithUsers();
-
-            await _hubContext.Groups.AddToGroupAsync(dto.ConnectionId, dto.ChatroomId.ToString());
-            await _hubContext.Clients.Group(dto.ChatroomId.ToString())
-                .SendAsync("UserConnected", user.UserName);
-            await _hubContext.Clients.Group(dto.ChatroomId.ToString())
-                .SendAsync("UpdateUsersList", chatroom.Users);
-
-            await _hubContext.Clients.All.SendAsync("RoomsUpdated", allChatrooms);
+            await _signalRManager.UpdateChatroomsOnUserJoin(user, dto.ChatroomId, dto.ConnectionId);
 
             return Ok();
         }
@@ -82,15 +66,7 @@ namespace Chatterz.API.Controllers
         public async Task<ActionResult> Leave(ChatroomJoinDto dto)
         {
             var user = await _userService.GetAsync(dto.UserId);
-            var allChatrooms = await _chatroomService.GetAllWithUsers();
-            var chatroom = await _chatroomService.RemoveUserFromChatroom(dto.ChatroomId, user);
-
-            await _hubContext.Groups.RemoveFromGroupAsync(dto.ConnectionId, dto.ChatroomId.ToString());
-            await _hubContext.Clients.Group(dto.ChatroomId.ToString())
-                .SendAsync("UserDisconnected", user.UserName);
-            await _hubContext.Clients.Group(dto.ChatroomId.ToString())
-                .SendAsync("UpdateUsersList", chatroom.Users);
-            await _hubContext.Clients.All.SendAsync("RoomsUpdated", allChatrooms);
+            await _signalRManager.UpdateChatroomsOnUserLeave(user, dto.ChatroomId, dto.ConnectionId);
 
             return Ok();
         }
