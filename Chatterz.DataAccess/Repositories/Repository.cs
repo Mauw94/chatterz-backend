@@ -60,7 +60,11 @@ namespace Chatterz.DataAccess.Repositories
         {
             try
             {
-                return await ApplicationDbContext.Set<T>().FindAsync(id); // null reference error is handled before this
+                var result = await ApplicationDbContext.Set<T>().FindAsync(id);
+                if (result == null)
+                    throw new ArgumentException($"Could not find entity {typeof(T)} with id {id}");
+
+                return result;
             }
             catch (Exception ex)
             {
