@@ -1,4 +1,5 @@
 using Chatterz.API.Manages.Interfaces;
+using Chatterz.Domain.DTO;
 using Chatterz.Domain.Models;
 using Chatterz.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -38,17 +39,17 @@ namespace Chatterz.API.Controllers.GameControllers
 
         [HttpPost]
         [Route("api/game/wordguesser/connect")]
-        public async Task<ActionResult<WordGuesser>> Connect(int gameId, User player, string connectionId)
+        public async Task<ActionResult<WordGuesser>> Connect(GameConnectDto dto)
         {
-            var game = await _gameService.GetAsync(gameId);
+            var game = await _gameService.GetAsync(dto.GameId);
 
             if (game.Players.Count >= game.MaxPlayers)
                 return BadRequest("Game is full, you cannot join this game anymore.");
 
-            await _gameService.AddPlayer(game, player);
+            await _gameService.AddPlayer(game, dto.Player);
 
-            await _gameManager.AddPlayerToGameGroup("wordguesser" + game.Id, connectionId);
-            await _gameManager.SendGameroomUpdate("wordguesser" + game.Id, player.UserName + " connected");
+            await _gameManager.AddPlayerToGameGroup("wordguesser" + game.Id, dto.ConnectionId);
+            await _gameManager.SendGameroomUpdate("wordguesser" + game.Id, dto.Player.UserName + " connected");
 
             // TODO: update user's gameconnectionid
 
