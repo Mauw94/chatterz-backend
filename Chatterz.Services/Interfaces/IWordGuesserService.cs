@@ -15,8 +15,18 @@ namespace Chatterz.Services.Interfaces
         int DetermineFirstTurn(IEnumerable<int> userIds);
 
         /// <summary>
+        /// Create a new game. 
+        /// </summary>
+        Task<int> Create();
+
+        /// <summary>
         /// Start the game.
         /// </summary>
         Task Start(WordGuesser game);
+
+        /// <summary>
+        /// Add a new player to the game. 
+        /// </summary>
+        Task AddPlayer(WordGuesser game, User player);
     }
 }

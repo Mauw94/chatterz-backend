@@ -10,10 +10,26 @@ namespace Chatterz.DataAccess.Repositories
             : base(dbContext)
         { }
 
+        public async Task<int> Create()
+        {
+            var game = new WordGuesser();
+            ApplicationDbContext.WordGuessers.Add(game);
+            await ApplicationDbContext.SaveChangesAsync();
+
+            return game.Id;
+        }
+
         public async Task Start(WordGuesser game)
         {
             game.IsGameStarted = true;
             ApplicationDbContext.WordGuessers.Add(game);
+            await ApplicationDbContext.SaveChangesAsync();
+        }
+
+        public async Task AddPlayer(WordGuesser game, User player)
+        {
+            game.Players.Add(player);
+            ApplicationDbContext.WordGuessers.Update(game);
             await ApplicationDbContext.SaveChangesAsync();
         }
     }

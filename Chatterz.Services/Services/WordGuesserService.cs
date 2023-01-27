@@ -35,9 +35,19 @@ namespace Chatterz.Services.Services
             return userIds.ToArray()[rnd];
         }
 
+        public async Task<int> Create()
+        {
+            return await _wordGuesserRepository.Create();
+        }
+
         public async Task Start(WordGuesser game)
         {
             await _wordGuesserRepository.Start(game);
+        }
+
+        public async Task AddPlayer(WordGuesser game, User player)
+        {
+            await _wordGuesserRepository.AddPlayer(game, player);
         }
     }
 }

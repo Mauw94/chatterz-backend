@@ -10,6 +10,7 @@ namespace Chatterz.API.Controllers.GameControllers
     {
         private readonly IWordGuesserService _gameService;
         private readonly IGameManager _gameManager;
+        
         // TODO: create gamehub
         // create seperate manager to handle signalR gamehub?
         // add players to gamehub group when connecting
@@ -24,26 +25,35 @@ namespace Chatterz.API.Controllers.GameControllers
             _gameManager = gameManager;
         }
 
+        [HttpGet]
+        [Route("api/game/wordguesser/create")]
+        public async Task<ActionResult<int>> Create()
+        {
+            // TODO: call this when other user accepts the game invite
+            // call Connect when launching the game component
+
+            var gameId = await _gameService.Create();
+            return Ok(gameId);
+        }
+
         [HttpPost]
         [Route("api/game/wordguesser/connect")]
-        public async Task<ActionResult<WordGuesser>> Connect(User player, string connectionId)
+        public async Task<ActionResult<WordGuesser>> Connect(int gameId, User player, string connectionId)
         {
-            var game = new WordGuesser();
-            var addedPlayer = game.AddPlayer(player);
+            var game = await _gameService.GetAsync(gameId);
+
+            if (game.Players.Count >= game.MaxPlayers)
+                return BadRequest("Game is full, you cannot join this game anymore.");
+
+            await _gameService.AddPlayer(game, player);
 
             // TODO save game before this call
             // create specific group id creation method or something, so its always unique
             // with name of the game + its id since thatll always be unique
             // send update to frontend saying that a player connected to this specific gameroom
-            
-            await _gameManager.AddPlayerToGameGroup("TODO_ID", connectionId);
 
-            if (addedPlayer && game.Players.Count == 2)
-            {
-                game.WordToGuess = _gameService.GenerateRandomWord(5);
-                game.PlayerToStart = _gameService.DetermineFirstTurn(game.Players.Select(p => p.Id));
-                await _gameService.Start(game);
-            }
+            await _gameManager.AddPlayerToGameGroup("wordguesser" + game.Id, connectionId);
+            await _gameManager.SendPlayerJoinedGroupUpdate("wordguesser" + game.Id, player);
 
             return Ok(game);
         }
