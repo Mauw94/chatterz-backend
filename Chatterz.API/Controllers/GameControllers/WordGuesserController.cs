@@ -47,17 +47,26 @@ namespace Chatterz.API.Controllers.GameControllers
 
             await _gameService.AddPlayer(game, player);
 
-            // TODO save game before this call
-            // create specific group id creation method or something, so its always unique
-            // with name of the game + its id since thatll always be unique
-            // send update to frontend saying that a player connected to this specific gameroom
-
             await _gameManager.AddPlayerToGameGroup("wordguesser" + game.Id, connectionId);
             await _gameManager.SendGameroomUpdate("wordguesser" + game.Id, player.UserName + " connected");
 
+            // TODO: update user's gameconnectionid
+
             return Ok(game);
         }
-    
+
+        [HttpPost]
+        [Route("api/game/wordguesser/disconnect")]
+        public async Task<ActionResult> Disconnect(int gameId, string connectionId, User player)
+        {
+            var game = await _gameService.GetAsync(gameId);
+
+            await _gameManager.RemovePlayerFromGameGroup("wordguesser" + game.Id, connectionId);
+            await _gameManager.SendGameroomUpdate("wordguesser" + game.Id, player.UserName + " disconnected");
+
+            return Ok();
+        }
+
         [HttpGet]
         [Route("api/game/wordguesser/start")]
         public async Task<ActionResult> Start(int gameId)

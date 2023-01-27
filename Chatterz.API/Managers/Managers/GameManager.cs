@@ -19,6 +19,11 @@ namespace Chatterz.API.Manages.Managers
             await _hubContext.Groups.AddToGroupAsync(groupId, connectionId);
         }
 
+        public async Task RemovePlayerFromGameGroup(string groupId, string connectionId)
+        {
+            await _hubContext.Groups.RemoveFromGroupAsync(groupId, connectionId);
+        }
+
         public async Task SendGameroomUpdate(string groupId, string message)
         {
             await _hubContext.Clients.Group(groupId).SendAsync("PlayerJoined", message);
