@@ -31,6 +31,7 @@ namespace Chatterz.API
             builder.Services.AddScoped<IWordGuesserRepository, WordGuesserRepository>();
             builder.Services.AddScoped<IWordGuesserService, WordGuesserService>();
             builder.Services.AddScoped<ISignalRManager, SignalRManager>();
+            builder.Services.AddScoped<IGameManager, GameManager>();
 
             var app = builder.Build();
 
@@ -54,6 +55,7 @@ namespace Chatterz.API
 
             app.MapControllers();
             app.MapHub<ChatHub>("/signalr");
+            app.MapHub<ChatHub>("/signalr_game");
             app.Run();
         }
     }

@@ -1,3 +1,4 @@
+using Chatterz.Domain.Enums;
 using Chatterz.Domain.Models;
 
 namespace Chatterz.Domain
@@ -7,6 +8,6 @@ namespace Chatterz.Domain
         public User Challenger { get; set; }
         public int UserId { get; set; }
         public string InviteMessage { get; set; }
-        public int GameId { get; set; }
+        public GameType GameType { get; set; }
     }
 }

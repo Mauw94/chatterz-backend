@@ -18,11 +18,15 @@ namespace Chatterz.Domain.Models
             Players = new();
         }
 
-        public virtual void AddPlayer(User player)
+        public virtual bool AddPlayer(User player)
         {
-            if (Players.Count >= MaxPlayers) return;
+            if (Players.Count >= MaxPlayers) return false;
             if (!Players.Contains(player))
+            {
                 Players.Add(player);
+                return true;
+            }
+            return false;
         }
     }
 }

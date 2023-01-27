@@ -1,5 +1,6 @@
 using Chatterz.Domain;
 using Chatterz.Domain.DTO;
+using Chatterz.Domain.Enums;
 using Chatterz.Domain.Models;
 using Chatterz.HUBS;
 using Chatterz.Services.Interfaces;
@@ -57,7 +58,7 @@ namespace Chatterz.API.Controllers
 
         [HttpGet]
         [Route("api/users/challenge")]
-        public async Task<ActionResult> Challenge(int challengerUserId, int userId, string inviteMessage, int gameId)
+        public async Task<ActionResult> Challenge(int challengerUserId, int userId, string inviteMessage, GameType gameType)
         {
             var user = await _userService.GetAsync(userId);
             var challenger = await _userService.GetAsync(challengerUserId);
@@ -66,7 +67,7 @@ namespace Chatterz.API.Controllers
             {
                 Challenger = challenger,
                 InviteMessage = challenger.UserName + " " + inviteMessage,
-                GameId = gameId
+                GameType = gameType
             };
 
             await _hubContext.Clients.Client(user.ConnectionId)
@@ -84,7 +85,7 @@ namespace Chatterz.API.Controllers
 
             await _hubContext.Clients
                 .Clients(challenger.ConnectionId, user.ConnectionId)
-                .SendAsync("AcceptGameInvite", gameInvite.GameId);
+                .SendAsync("AcceptGameInvite", gameInvite.GameType);
 
             return Ok();
         }
