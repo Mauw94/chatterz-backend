@@ -58,7 +58,7 @@ namespace Chatterz.API.Controllers
 
         [HttpGet]
         [Route("api/users/challenge")]
-        public async Task<ActionResult> Challenge(int challengerUserId, int userId, string inviteMessage, GameType gameType)
+        public async Task<ActionResult> Challenge(int challengerUserId, int userId, string inviteMessage, int gameType)
         {
             var user = await _userService.GetAsync(userId);
             var challenger = await _userService.GetAsync(challengerUserId);
@@ -67,7 +67,8 @@ namespace Chatterz.API.Controllers
             {
                 Challenger = challenger,
                 InviteMessage = challenger.UserName + " " + inviteMessage,
-                GameType = gameType
+                GameType = gameType,
+                UserId = userId
             };
 
             await _hubContext.Clients.Client(user.ConnectionId)
