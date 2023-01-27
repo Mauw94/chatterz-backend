@@ -10,7 +10,7 @@ namespace Chatterz.API.Controllers.GameControllers
     {
         private readonly IWordGuesserService _gameService;
         private readonly IGameManager _gameManager;
-        
+
         // TODO: create gamehub
         // create seperate manager to handle signalR gamehub?
         // add players to gamehub group when connecting
@@ -53,9 +53,20 @@ namespace Chatterz.API.Controllers.GameControllers
             // send update to frontend saying that a player connected to this specific gameroom
 
             await _gameManager.AddPlayerToGameGroup("wordguesser" + game.Id, connectionId);
-            await _gameManager.SendPlayerJoinedGroupUpdate("wordguesser" + game.Id, player);
+            await _gameManager.SendGameroomUpdate("wordguesser" + game.Id, player.UserName + " connected");
 
             return Ok(game);
+        }
+    
+        [HttpGet]
+        [Route("api/game/wordguesser/start")]
+        public async Task<ActionResult> Start(int gameId)
+        {
+            var game = await _gameService.GetAsync(gameId);
+            await _gameService.Start(game);
+            await _gameManager.SendGameroomUpdate("wordguesser" + game.Id, "game started, let's GOO!");
+
+            return Ok();
         }
     }
 }

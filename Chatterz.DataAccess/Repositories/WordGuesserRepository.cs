@@ -22,7 +22,7 @@ namespace Chatterz.DataAccess.Repositories
         public async Task Start(WordGuesser game)
         {
             game.IsGameStarted = true;
-            ApplicationDbContext.WordGuessers.Add(game);
+            ApplicationDbContext.WordGuessers.Update(game);
             await ApplicationDbContext.SaveChangesAsync();
         }
 

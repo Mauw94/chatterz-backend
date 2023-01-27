@@ -12,6 +12,6 @@ namespace Chatterz.API.Manages.Interfaces
         /// <summary>
         /// Send update to the group that a player has joined.
         /// </summary>
-        Task SendPlayerJoinedGroupUpdate(string groupId, User user);
+        Task SendGameroomUpdate(string groupId, string message);
     }
 }

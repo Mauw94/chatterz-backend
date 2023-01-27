@@ -19,9 +19,9 @@ namespace Chatterz.API.Manages.Managers
             await _hubContext.Groups.AddToGroupAsync(groupId, connectionId);
         }
 
-        public async Task SendPlayerJoinedGroupUpdate(string groupId, User user)
+        public async Task SendGameroomUpdate(string groupId, string message)
         {
-            await _hubContext.Clients.Group(groupId).SendAsync("PlayerJoined", user.UserName);
+            await _hubContext.Clients.Group(groupId).SendAsync("PlayerJoined", message);
         }
 
         public async Task SendStartGame(string groupId, string connectionId)
