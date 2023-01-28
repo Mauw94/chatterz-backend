@@ -56,7 +56,7 @@ namespace Chatterz.API.Controllers.GameControllers
             await _gameManager.SendGameroomUpdate("wordguesser" + game.Id, dto.Player.UserName + " connected");
 
             await _userService.UpdateGameConnectionInfo(dto.Player.Id, dto.ConnectionId);
-            
+
             return Ok(game);
         }
 
@@ -82,5 +82,9 @@ namespace Chatterz.API.Controllers.GameControllers
 
             return Ok();
         }
+
+        // TODO: method in gamehub to update state and send guesses over the connection     
+        // make gamehub interface
+        // invoke method when playing the game
     }
 }
