@@ -92,7 +92,7 @@ namespace Chatterz.API.Controllers
 
         [HttpGet]
         [Route("api/users/check_game_inprogress")]
-        public async Task<ActionResult<bool>> CheckWordGuesserGameInProgres(int userId)
+        public async Task<ActionResult<int>> CheckWordGuesserGameInProgres(int userId)
         {
             var result = await _userService.CheckWordGuesserInProgress(userId);
             return Ok(result);

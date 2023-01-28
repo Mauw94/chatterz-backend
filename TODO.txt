@@ -1,8 +1,11 @@
 ------ BUGS ------
-* can't have 2 client socket connections going at the same time apperently..
+
 
 ------ TODO ------
 
+* send updates to gameroom when playing wordguesser
+
+* move create chatroom/change username from navbar to someplace else
 * update gameconnectionId for the player (user)
 * don't logout when chatsignalR connection is broken
 * be able to reconnect to existing game

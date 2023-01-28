@@ -25,7 +25,9 @@ namespace Chatterz.Services.Services
 
         public async Task UpdateConnectionInfo(int id, string connectionId)
         {
-            await _userRepo.UpdateConnectionInfo(id, connectionId);
+            var user = await _userRepo.GetAsync(id);
+            user.ConnectionId = connectionId;
+            await _userRepo.UpdateAsync(user);
         }
 
         public async Task<User> Logout(int userId)
@@ -33,15 +35,22 @@ namespace Chatterz.Services.Services
             return await _userRepo.Logout(userId);
         }
 
-        public async Task<bool> CheckWordGuesserInProgress(int userId)
+        public async Task<int> CheckWordGuesserInProgress(int userId)
         {
             var user = await _userRepo.GetAsync(userId);
-            if (!user.WordGuesserId.HasValue) return false;
+            if (!user.WordGuesserId.HasValue) return 0;
 
             var game = await _wordGuesserRepository.GetAsync(user.WordGuesserId.Value);
-            if (game.IsGameOver) return false;
+            if (game.IsGameOver) return 0;
 
-            return true;
+            return game.Id;
+        }
+
+        public async Task UpdateGameConnectionInfo(int id, string connectionId)
+        {
+            var user = await _userRepo.GetAsync(id);
+            user.GameConnectionId = connectionId;
+            await _userRepo.UpdateAsync(user);
         }
     }
 }

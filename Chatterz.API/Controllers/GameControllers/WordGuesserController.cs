@@ -10,6 +10,7 @@ namespace Chatterz.API.Controllers.GameControllers
     public class WordGuesserController : ControllerBase
     {
         private readonly IWordGuesserService _gameService;
+        private readonly IUserService _userService;
         private readonly IGameManager _gameManager;
 
         // TODO: create gamehub
@@ -42,6 +43,9 @@ namespace Chatterz.API.Controllers.GameControllers
         public async Task<ActionResult<WordGuesser>> Connect(GameConnectDto dto)
         {
             var game = await _gameService.GetAsync(dto.GameId);
+            // TODO: include players in get
+            // check if same player tries to reconnect to the game -> allow it
+            // if another player tries to connect and game is full -> don't allow
 
             if (game.Players.Count >= game.MaxPlayers)
                 return BadRequest("Game is full, you cannot join this game anymore.");
@@ -51,8 +55,8 @@ namespace Chatterz.API.Controllers.GameControllers
             await _gameManager.AddPlayerToGameGroup("wordguesser" + game.Id, dto.ConnectionId);
             await _gameManager.SendGameroomUpdate("wordguesser" + game.Id, dto.Player.UserName + " connected");
 
-            // TODO: update user's gameconnectionid
-
+            await _userService.UpdateGameConnectionInfo(dto.Player.Id, dto.ConnectionId);
+            
             return Ok(game);
         }
 

@@ -15,13 +15,18 @@ namespace Chatterz.Services.Interfaces
         Task<User> Logout(int userId);
 
         /// <summary>
-        /// Update user connection id when signalR connection is established.
+        /// Update user connection id when (chat) signalR connection is established.
         /// </summary>
         Task UpdateConnectionInfo(int id, string connectionId);
 
         /// <summary>
         /// Check if a wordguesser game is still in progress.
         /// </summary>
-        Task<bool> CheckWordGuesserInProgress(int userId);
+        Task<int> CheckWordGuesserInProgress(int userId);
+
+        /// <summary>
+        /// Update user connection id when (game) signalR connection is established.
+        /// </summary>
+        Task UpdateGameConnectionInfo(int id, string connectionId);
     }
 }
