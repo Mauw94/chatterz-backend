@@ -90,10 +90,12 @@ namespace Chatterz.API.Controllers
             return Ok();
         }
 
-        // TODO: 
-        // check if user has a gameId
-        // check if the game is over
-        // otherwise the game is still in progress and the user can return to it
-        
+        [HttpGet]
+        [Route("api/users/check_game_inprogress")]
+        public async Task<ActionResult<bool>> CheckWordGuesserGameInProgres(int userId)
+        {
+            var result = await _userService.CheckWordGuesserInProgress(userId);
+            return Ok(result);
+        }
     }
 }

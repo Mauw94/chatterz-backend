@@ -7,11 +7,15 @@ namespace Chatterz.Services.Services
     public class UserService : Service<User>, IUserService
     {
         private readonly IUserRepository _userRepo;
-
-        public UserService(IRepository<User> repository, IUserRepository userRepo)
+        private readonly IWordGuesserRepository _wordGuesserRepository;
+        public UserService(
+            IRepository<User> repository,
+            IUserRepository userRepo,
+            IWordGuesserRepository wordGuesserRepository)
             : base(repository)
         {
             _userRepo = userRepo;
+            _wordGuesserRepository = wordGuesserRepository;
         }
 
         public async Task<User> Login(string userName, string password)
@@ -27,6 +31,17 @@ namespace Chatterz.Services.Services
         public async Task<User> Logout(int userId)
         {
             return await _userRepo.Logout(userId);
+        }
+
+        public async Task<bool> CheckWordGuesserInProgress(int userId)
+        {
+            var user = await _userRepo.GetAsync(userId);
+            if (!user.WordGuesserId.HasValue) return false;
+
+            var game = await _wordGuesserRepository.GetAsync(user.WordGuesserId.Value);
+            if (game.IsGameOver) return false;
+
+            return true;
         }
     }
 }

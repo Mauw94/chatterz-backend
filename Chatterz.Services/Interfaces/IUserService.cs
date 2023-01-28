@@ -18,5 +18,10 @@ namespace Chatterz.Services.Interfaces
         /// Update user connection id when signalR connection is established.
         /// </summary>
         Task UpdateConnectionInfo(int id, string connectionId);
+
+        /// <summary>
+        /// Check if a wordguesser game is still in progress.
+        /// </summary>
+        Task<bool> CheckWordGuesserInProgress(int userId);
     }
 }
