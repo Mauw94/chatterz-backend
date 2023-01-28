@@ -1,12 +1,12 @@
 ------ BUGS ------
+* can't have 2 client socket connections going at the same time apperently..
 
 ------ TODO ------
 
-* be able to invite/challenge someone to play a game (for now just 1v1)
-    - right click on user and show context menu with options of games to play -> DONE
-    - other player gets popup window with the invited
-        (send signalR request via API) _> DONE
-    - when accepting the gamewindow opens 
+* update gameconnectionId for the player (user)
+* don't logout when chatsignalR connection is broken
+* be able to reconnect to existing game
+* create chatroom for the gameroom 
 
 * set login flag in user table in db
 * redo login/auth in a proper way

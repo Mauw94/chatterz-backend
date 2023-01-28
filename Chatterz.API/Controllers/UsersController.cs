@@ -1,6 +1,5 @@
 using Chatterz.Domain;
 using Chatterz.Domain.DTO;
-using Chatterz.Domain.Enums;
 using Chatterz.Domain.Models;
 using Chatterz.HUBS;
 using Chatterz.Services.Interfaces;
@@ -86,9 +85,15 @@ namespace Chatterz.API.Controllers
 
             await _hubContext.Clients
                 .Clients(challenger.ConnectionId, user.ConnectionId)
-                .SendAsync("AcceptGameInvite", gameInvite.GameType);
+                .SendAsync("AcceptGameInvite", gameInvite);
 
             return Ok();
         }
+
+        // TODO: 
+        // check if user has a gameId
+        // check if the game is over
+        // otherwise the game is still in progress and the user can return to it
+        
     }
 }
