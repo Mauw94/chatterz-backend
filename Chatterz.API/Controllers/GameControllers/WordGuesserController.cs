@@ -21,10 +21,11 @@ namespace Chatterz.API.Controllers.GameControllers
         // game is being played
         // update every turn
 
-        public WordGuesserController(IWordGuesserService service, IGameManager gameManager)
+        public WordGuesserController(IWordGuesserService service, IUserService userService, IGameManager gameManager)
         {
             _gameService = service;
             _gameManager = gameManager;
+            _userService = userService;
         }
 
         [HttpGet]
