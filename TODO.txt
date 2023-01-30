@@ -2,8 +2,14 @@
 
 
 ------ TODO ------
-
-* send updates to gameroom when playing wordguesser
+* implement player turns
+* implement tictactoe
+* create gamestart button (player who sent the inv can start the game)
+* implement gameroom chat
+* reconnecting to existing game
+    - fetch guessed words history
+    - add max width + more stylign to guessed words
+    - reconnect to the same room
 
 * move create chatroom/change username from navbar to someplace else
 * update gameconnectionId for the player (user)
