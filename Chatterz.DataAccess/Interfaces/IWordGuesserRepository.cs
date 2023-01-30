@@ -18,5 +18,10 @@ namespace Chatterz.DataAccess.Interfaces
         /// Start the game.
         /// </summary>
         Task Start(WordGuesser game);
+
+        /// <summary>
+        /// Get the game including the players.
+        /// </summary>
+        Task<WordGuesser> GetIncludingPlayers(int gameId);
     }
 }

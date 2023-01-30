@@ -77,11 +77,24 @@ namespace Chatterz.API.Controllers.GameControllers
         [Route("api/game/wordguesser/start")]
         public async Task<ActionResult> Start(int gameId)
         {
+            // TODO: determine player turn here
+            // pass it in the dto or something
             var game = await _gameService.GetAsync(gameId);
             await _gameService.Start(game);
             await _gameManager.SendGameroomUpdate("wordguesser" + game.Id, "game started, let's GOO!");
 
             return Ok();
+        }
+
+        [HttpGet]
+        [Route("api/game/wordguesser/can_start")]
+        public async Task<ActionResult<bool>> CanStartGame(int gameId)
+        {
+            var game = await _gameService.GetIncludingPlayers(gameId);
+            if (game.Players.Count < 2)
+                return Ok(false);
+            
+            return Ok(true);
         }
 
         // TODO: method in gamehub to update state and send guesses over the connection     

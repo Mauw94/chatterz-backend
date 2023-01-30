@@ -13,5 +13,6 @@ namespace Chatterz.DataAccess.Interfaces
         /// Logout user.
         /// </summary>
         Task<User> Logout(int userId);
+      
     }
 }

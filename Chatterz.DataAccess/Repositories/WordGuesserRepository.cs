@@ -1,5 +1,6 @@
 using Chatterz.DataAccess.Interfaces;
 using Chatterz.Domain.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Chatterz.DataAccess.Repositories
 {
@@ -31,6 +32,17 @@ namespace Chatterz.DataAccess.Repositories
             game.Players.Add(player);
             ApplicationDbContext.WordGuessers.Update(game);
             await ApplicationDbContext.SaveChangesAsync();
+        }
+
+        public async Task<WordGuesser> GetIncludingPlayers(int gameId)
+        {
+            var game = await ApplicationDbContext.WordGuessers
+                .Include(x => x.Players)
+                .FirstOrDefaultAsync(x => x.Id == gameId);
+
+            if (game == null) throw new ArgumentException("Could not find wordguesser game.");
+
+            return game;
         }
     }
 }

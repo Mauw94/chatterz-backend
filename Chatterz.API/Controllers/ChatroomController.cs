@@ -18,7 +18,6 @@ namespace Chatterz.API.Controllers
         private readonly ISignalRManager _signalRManager;
         private readonly IService<ChatMessage> _chatMessageService;
 
-
         public ChatroomController(
             IHubContext<ChatHub> hubContext,
             IUserService userService,
@@ -94,6 +93,7 @@ namespace Chatterz.API.Controllers
         {
             var chatMessages = await _chatMessageService
                 .GetAllAsQueryable(c => c.ChatroomId == chatroomId)
+                .Where(c => c.DateTime.Date.Day == DateTime.Now.Date.Day)
                 .ToListAsync();
 
             return Ok(chatMessages);

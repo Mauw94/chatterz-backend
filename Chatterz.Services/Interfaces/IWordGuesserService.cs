@@ -28,5 +28,10 @@ namespace Chatterz.Services.Interfaces
         /// Add a new player to the game. 
         /// </summary>
         Task AddPlayer(WordGuesser game, User player);
+
+        /// <summary>
+        /// Get the game including the players.
+        /// </summary>
+        Task<WordGuesser> GetIncludingPlayers(int gameId);
     }
 }

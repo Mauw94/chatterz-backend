@@ -49,5 +49,10 @@ namespace Chatterz.Services.Services
         {
             await _wordGuesserRepository.AddPlayer(game, player);
         }
+
+        public async Task<WordGuesser> GetIncludingPlayers(int gameId)
+        {
+            return await _wordGuesserRepository.GetIncludingPlayers(gameId);
+        }
     }
 }
