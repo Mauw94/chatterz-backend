@@ -45,7 +45,7 @@ namespace Chatterz.DataAccess.Repositories
             return game;
         }
 
-        public async Task EndGame(int gameId, int winnerId)
+        public async Task EndGame(int gameId, int? winnerId)
         {
             var game = await ApplicationDbContext.WordGuessers
                 .FirstOrDefaultAsync(w => w.Id == gameId);
@@ -53,8 +53,9 @@ namespace Chatterz.DataAccess.Repositories
             if (game == null) throw new ArgumentException("Could not find game.");
 
             if (game.IsGameOver) return;
-            
-            game.WinnerId = winnerId;
+
+            if (winnerId.HasValue)
+                game.WinnerId = winnerId.Value;
             game.IsGameOver = true;
             game.IsGameStarted = false;
 

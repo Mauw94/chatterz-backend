@@ -27,6 +27,6 @@ namespace Chatterz.DataAccess.Interfaces
         /// <summary>
         /// Game ends en we set the winner.
         /// </summary>
-        Task EndGame(int gameId, int winnerId);
+        Task EndGame(int gameId, int? winnerId);
     }
 }

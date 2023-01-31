@@ -68,10 +68,11 @@ namespace Chatterz.API.Controllers.GameControllers
             await _gameManager.RemovePlayerFromGameGroup("wordguesser" + game.Id, connectionId);
             await _gameManager.GameEnded("wordguesser" + game.Id, opponent.UserName + " has left, the game has ended, you win!");
             await _userService.DisconnectFromWordguesser(playerId);
+            var winner = game.Players.FirstOrDefault(p => p.Id != playerId);
 
             if (!game.IsGameOver) // player who disconnects after the first player 
                                   //has disconnected should not trigger another game end event
-                await _gameService.EndGame(game.Id, game.Players.Where(p => p.Id != playerId).First().Id);
+                await _gameService.EndGame(game.Id, winner == null ? null : winner.Id);
 
             return Ok();
         }

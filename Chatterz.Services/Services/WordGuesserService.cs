@@ -52,7 +52,7 @@ namespace Chatterz.Services.Services
             return await _wordGuesserRepository.GetIncludingPlayers(gameId);
         }
 
-        public async Task EndGame(int gameId, int winnerId)
+        public async Task EndGame(int gameId, int? winnerId)
         {
             await _wordGuesserRepository.EndGame(gameId, winnerId);
         }
