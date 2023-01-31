@@ -41,9 +41,9 @@ namespace Chatterz.API.Controllers.GameControllers
 
         [HttpPost]
         [Route("api/game/wordguesser/connect")]
-        public async Task<ActionResult<WordGuesser>> Connect(GameConnectDto dto)
+        public async Task<ActionResult> Connect(GameConnectDto dto)
         {
-            var game = await _gameService.GetAsync(dto.GameId);
+            var game = await _gameService.GetIncludingPlayers(dto.GameId);
             // TODO: include players in get
             // check if same player tries to reconnect to the game -> allow it
             // if another player tries to connect and game is full -> don't allow
@@ -58,7 +58,7 @@ namespace Chatterz.API.Controllers.GameControllers
 
             await _userService.UpdateGameConnectionInfo(dto.Player.Id, dto.ConnectionId);
 
-            return Ok(game);
+            return Ok();
         }
 
         [HttpPost]
@@ -77,28 +77,45 @@ namespace Chatterz.API.Controllers.GameControllers
         [Route("api/game/wordguesser/start")]
         public async Task<ActionResult> Start(int gameId)
         {
-            // TODO: determine player turn here
-            // pass it in the dto or something
-            var game = await _gameService.GetAsync(gameId);
+            var game = await _gameService.GetIncludingPlayers(gameId);
             await _gameService.Start(game);
             await _gameManager.SendGameroomUpdate("wordguesser" + game.Id, "game started, let's GOO!");
+
+            // TODO: generate new word to guess here
+
+            var wordGuesserDto = new WordGuesserDto()
+            {
+                GameroomId = "wordguesser" + game.Id,
+                PlayerIds = game.Players.Select(x => x.Id).ToList(),
+                GuessedWord = "",
+                PlayerToPlay = DecidePlayerTurn(game.Players),
+                WordToGuess = game.WordToGuess
+            };
+
+            await _gameManager.StartGame("wordguesser" + game.Id, wordGuesserDto);
 
             return Ok();
         }
 
         [HttpGet]
         [Route("api/game/wordguesser/can_start")]
-        public async Task<ActionResult<bool>> CanStartGame(int gameId)
+        public async Task<ActionResult> CanStartGame(int gameId)
         {
             var game = await _gameService.GetIncludingPlayers(gameId);
-            if (game.Players.Count < 2)
-                return Ok(false);
-            
-            return Ok(true);
+
+            if (game.Players.Count <= 2)
+                await _gameManager.CanStartGame("wordguesser" + game.Id, false);
+
+            if (game.Players.Count == 2)
+                await _gameManager.CanStartGame("wordguesser" + game.Id, true);
+
+            return Ok();
         }
 
-        // TODO: method in gamehub to update state and send guesses over the connection     
-        // make gamehub interface
-        // invoke method when playing the game
+        private int DecidePlayerTurn(List<User> users)
+        {
+            var rnd = new Random().Next(users.Count);
+            return users[rnd].Id;
+        }
     }
 }

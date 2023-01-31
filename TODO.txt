@@ -2,14 +2,17 @@
 
 
 ------ TODO ------
-* implement player turns
-* implement tictactoe
-* create gamestart button (player who sent the inv can start the game)
+* when leaving, disconnect from hub and update state in db
+* game pauses when a player leaves
+* be able to reconnect to the game
+* save wordguesses history somewhere
+
 * implement gameroom chat
 * reconnecting to existing game
     - fetch guessed words history
     - add max width + more stylign to guessed words
     - reconnect to the same room
+* implement tictactoe
 
 * move create chatroom/change username from navbar to someplace else
 * update gameconnectionId for the player (user)

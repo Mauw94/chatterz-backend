@@ -1,5 +1,5 @@
 using Chatterz.API.Manages.Interfaces;
-using Chatterz.Domain.Models;
+using Chatterz.Domain.DTO;
 using Chatterz.HUBS;
 using Microsoft.AspNetCore.SignalR;
 
@@ -29,9 +29,14 @@ namespace Chatterz.API.Manages.Managers
             await _hubContext.Clients.Group(groupId).SendAsync("PlayerJoined", message);
         }
 
-        public async Task SendStartGame(string connectionId, string groupId)
+        public async Task CanStartGame(string groupId, bool canStart)
         {
+            await _hubContext.Clients.Group(groupId).SendAsync("CanStartGame", canStart);
+        }
 
+        public async Task StartGame(string groupId, WordGuesserDto dto)
+        {
+            await _hubContext.Clients.Group(groupId).SendAsync("StartGame", dto);
         }
     }
 }
