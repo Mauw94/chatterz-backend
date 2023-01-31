@@ -33,6 +33,11 @@ namespace Chatterz.API.Manages.Interfaces
         /// <summary>
         /// Send game ended update.
         /// </summary>
-        Task GameEnded(string groupId);
+        Task GameEnded(string groupId, string message);
+
+        /// <summary>
+        /// Send game win update.
+        /// </summary>
+        Task GameWin(string groupId, string message);
     }
 }

@@ -39,9 +39,14 @@ namespace Chatterz.API.Manages.Managers
             await _hubContext.Clients.Group(groupId).SendAsync("StartGame", dto);
         }
 
-        public async Task GameEnded(string groupId)
+        public async Task GameEnded(string groupId, string message)
         {
-            await _hubContext.Clients.Group(groupId).SendAsync("GameEnded", "User left, the game has ended");
+            await _hubContext.Clients.Group(groupId).SendAsync("GameEnded", message);
+        }
+
+        public async Task GameWin(string groupId, string message)
+        {
+            await _hubContext.Clients.Group(groupId).SendAsync("GameWin", message);
         }
     }
 }
