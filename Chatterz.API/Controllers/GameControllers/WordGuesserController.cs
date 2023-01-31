@@ -44,9 +44,6 @@ namespace Chatterz.API.Controllers.GameControllers
         public async Task<ActionResult> Connect(GameConnectDto dto)
         {
             var game = await _gameService.GetIncludingPlayers(dto.GameId);
-            // TODO: include players in get
-            // check if same player tries to reconnect to the game -> allow it
-            // if another player tries to connect and game is full -> don't allow
 
             if (game.Players.Count >= game.MaxPlayers)
                 return BadRequest("Game is full, you cannot join this game anymore.");
@@ -63,12 +60,17 @@ namespace Chatterz.API.Controllers.GameControllers
 
         [HttpPost]
         [Route("api/game/wordguesser/disconnect")]
-        public async Task<ActionResult> Disconnect(int gameId, string connectionId, User player)
+        public async Task<ActionResult> Disconnect(int gameId, string connectionId, int playerId)
         {
-            var game = await _gameService.GetAsync(gameId);
+            var game = await _gameService.GetIncludingPlayers(gameId);
 
             await _gameManager.RemovePlayerFromGameGroup("wordguesser" + game.Id, connectionId);
-            await _gameManager.SendGameroomUpdate("wordguesser" + game.Id, player.UserName + " disconnected");
+            await _gameManager.GameEnded("wordguesser" + game.Id);
+            await _userService.DisconnectFromWordguesser(playerId);
+
+            if (!game.IsGameOver) // player who disconnects after the first player 
+                                  //has disconnected should not trigger another game end event
+                await _gameService.EndGame(game.Id, game.Players.Where(p => p.Id != playerId).First().Id);
 
             return Ok();
         }
@@ -80,8 +82,7 @@ namespace Chatterz.API.Controllers.GameControllers
             var game = await _gameService.GetIncludingPlayers(gameId);
             await _gameService.Start(game);
             await _gameManager.SendGameroomUpdate("wordguesser" + game.Id, "game started, let's GOO!");
-
-            // TODO: generate new word to guess here
+            await _gameService.GenerateRandomWord(game, 4);
 
             var wordGuesserDto = new WordGuesserDto()
             {

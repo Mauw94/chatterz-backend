@@ -28,5 +28,10 @@ namespace Chatterz.Services.Interfaces
         /// Update user connection id when (game) signalR connection is established.
         /// </summary>
         Task UpdateGameConnectionInfo(int id, string connectionId);
+
+        /// <summary>
+        /// Disconnect from current wordguesser game.
+        /// </summary>
+        Task DisconnectFromWordguesser(int userId);
     }
 }

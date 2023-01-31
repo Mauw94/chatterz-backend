@@ -23,5 +23,10 @@ namespace Chatterz.DataAccess.Interfaces
         /// Get the game including the players.
         /// </summary>
         Task<WordGuesser> GetIncludingPlayers(int gameId);
+
+        /// <summary>
+        /// Game ends en we set the winner.
+        /// </summary>
+        Task EndGame(int gameId, int winnerId);
     }
 }

@@ -29,5 +29,10 @@ namespace Chatterz.API.Manages.Interfaces
         /// Send update that the game started.
         /// </summary>
         Task StartGame(string groupId, WordGuesserDto dto);
+
+        /// <summary>
+        /// Send game ended update.
+        /// </summary>
+        Task GameEnded(string groupId);
     }
 }

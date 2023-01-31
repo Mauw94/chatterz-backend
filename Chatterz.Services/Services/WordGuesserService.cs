@@ -14,7 +14,7 @@ namespace Chatterz.Services.Services
             _wordGuesserRepository = wordGuesserRepository;
         }
 
-        public string GenerateRandomWord(int wordLength)
+        public async Task<string> GenerateRandomWord(WordGuesser game, int wordLength)
         {
             var word = string.Empty;
             var abc = "abcdefghijklmnopqrstuvwxyz";
@@ -26,13 +26,10 @@ namespace Chatterz.Services.Services
                 word += abc[rnd];
             }
 
-            return word;
-        }
+            game.WordToGuess = word;
+            await _wordGuesserRepository.UpdateAsync(game);
 
-        public int DetermineFirstTurn(IEnumerable<int> userIds)
-        {
-            var rnd = new Random().Next(0, userIds.Count() - 1);
-            return userIds.ToArray()[rnd];
+            return word;
         }
 
         public async Task<int> Create()
@@ -53,6 +50,11 @@ namespace Chatterz.Services.Services
         public async Task<WordGuesser> GetIncludingPlayers(int gameId)
         {
             return await _wordGuesserRepository.GetIncludingPlayers(gameId);
+        }
+
+        public async Task EndGame(int gameId, int winnerId)
+        {
+            await _wordGuesserRepository.EndGame(gameId, winnerId);
         }
     }
 }

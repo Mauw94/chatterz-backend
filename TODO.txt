@@ -2,11 +2,13 @@
 
 
 ------ TODO ------
-* when leaving, disconnect from hub and update state in db
-* game pauses when a player leaves
-* be able to reconnect to the game
-* save wordguesses history somewhere
-
+* other player wins when someone leaves
+* update wordguesser state in db
+* generate real random word when starting game
+* keep track of how many games a player has won
+* end game when someone guesses correctly
+* start a new game after someone wins
+* ask confirmation when player changes route or wants to leave the game
 * implement gameroom chat
 * reconnecting to existing game
     - fetch guessed words history
@@ -14,6 +16,7 @@
     - reconnect to the same room
 * implement tictactoe
 
+* be able to register
 * move create chatroom/change username from navbar to someplace else
 * update gameconnectionId for the player (user)
 * don't logout when chatsignalR connection is broken
@@ -42,3 +45,4 @@
 * play a sound when a message is received
 * can choose color for name
 * be able to add friends (when users/login is done)
+* be able to reconnect to a game in progress

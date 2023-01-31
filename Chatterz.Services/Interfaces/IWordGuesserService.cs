@@ -7,12 +7,7 @@ namespace Chatterz.Services.Interfaces
         /// <summary>
         /// Generates a random word.
         /// </summary>
-        string GenerateRandomWord(int wordLength);
-
-        /// <summary>
-        /// Determine which player goes first.
-        /// </summary>
-        int DetermineFirstTurn(IEnumerable<int> userIds);
+        Task<string> GenerateRandomWord(WordGuesser game, int wordLength);
 
         /// <summary>
         /// Create a new game. 
@@ -33,5 +28,10 @@ namespace Chatterz.Services.Interfaces
         /// Get the game including the players.
         /// </summary>
         Task<WordGuesser> GetIncludingPlayers(int gameId);
+
+        /// <summary>
+        /// Game ends en we set the winner.
+        /// </summary>
+        Task EndGame(int gameId, int winnerId);
     }
 }

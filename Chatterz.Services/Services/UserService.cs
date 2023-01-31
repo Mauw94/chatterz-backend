@@ -52,5 +52,10 @@ namespace Chatterz.Services.Services
             user.GameConnectionId = connectionId;
             await _userRepo.UpdateAsync(user);
         }
+
+        public async Task DisconnectFromWordguesser(int userId)
+        {
+            await _userRepo.DisconnectFromWordguesser(userId);
+        }
     }
 }

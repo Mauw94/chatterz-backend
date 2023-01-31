@@ -32,5 +32,19 @@ namespace Chatterz.DataAccess.Repositories
 
             return user;
         }
+
+        public async Task DisconnectFromWordguesser(int userId)
+        {
+            var user = await ApplicationDbContext.Users.FirstOrDefaultAsync(u => u.Id == userId);
+
+            if (user == null)
+                throw new ArgumentException("Could not find user");
+
+            user.WordGuesserId = null;
+            user.GameConnectionId = null;
+
+            ApplicationDbContext.Users.Update(user);
+            await ApplicationDbContext.SaveChangesAsync();
+        }
     }
 }
