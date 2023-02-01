@@ -33,5 +33,10 @@ namespace Chatterz.Services.Interfaces
         /// Game ends en we set the winner.
         /// </summary>
         Task EndGame(int gameId, int? winnerId);
+
+        /// <summary>
+        /// Increase amount of guesses for a game.
+        /// </summary>
+        Task Guess(int gameId);
     }
 }

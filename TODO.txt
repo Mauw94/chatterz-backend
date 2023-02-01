@@ -1,7 +1,6 @@
 ------ BUGS ------
-* updating gameconnectionid and wordguesser game id -> set to null when game ends
-* create game is not called anymore after a game has ended and players want to start a new game
-* creating new game in main.comp fucks the db
+* leaving game disconnets the wrong player??
+* logout requires a chatroomid; should not be needed
 
 ------ TODO ------
 * other player wins when someone leaves

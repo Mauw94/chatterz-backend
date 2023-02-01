@@ -56,5 +56,10 @@ namespace Chatterz.Services.Services
         {
             await _wordGuesserRepository.EndGame(gameId, winnerId);
         }
+
+        public async Task Guess(int gameId)
+        {
+            await _wordGuesserRepository.Guess(gameId);
+        }
     }
 }

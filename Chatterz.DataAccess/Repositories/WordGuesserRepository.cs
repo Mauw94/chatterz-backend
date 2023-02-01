@@ -62,5 +62,14 @@ namespace Chatterz.DataAccess.Repositories
             ApplicationDbContext.WordGuessers.Update(game);
             await ApplicationDbContext.SaveChangesAsync();
         }
+
+        public async Task Guess(int gameId)
+        {
+            var game = await ApplicationDbContext.WordGuessers.FirstOrDefaultAsync(w => w.Id == gameId);
+            if (game == null) throw new ArgumentException("Could not find game.");
+            game.AmountOfGuesses++;
+            ApplicationDbContext.WordGuessers.Update(game);
+            await ApplicationDbContext.SaveChangesAsync();
+        }
     }
 }

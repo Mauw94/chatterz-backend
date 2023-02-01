@@ -49,11 +49,14 @@ namespace Chatterz.API.Controllers
 
         [HttpPost]
         [Route("api/login/logout")]
-        public async Task<ActionResult> Logout(int userId, string connectionId, int chatroomId)
+        public async Task<ActionResult> Logout(int userId, string connectionId)
         {
-            var user = await _userService.Logout(userId);
+            var user = await _userService.GetAsync(userId);
 
-            await _signalRManager.UpdateChatroomsOnUserLeave(user, chatroomId, connectionId);
+            if (user.ChatroomId.HasValue)
+                await _signalRManager.UpdateChatroomsOnUserLeave(user, user.ChatroomId.Value, connectionId);
+
+            user = await _userService.Logout(userId);
 
             return Ok();
         }
