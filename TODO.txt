@@ -1,20 +1,12 @@
 ------ BUGS ------
-* leaving game disconnets the wrong player??
-* logout requires a chatroomid; should not be needed
+
 
 ------ TODO ------
-* other player wins when someone leaves
-* update wordguesser state in db
-* generate real random word when starting game
-* keep track of how many games a player has won
-* end game when someone guesses correctly
-* start a new game after someone wins
-* ask confirmation when player changes route or wants to leave the game
+* ask if u want to leave the game when refreshing or leaving the page
+* use word dictionaries in api to generate real word
+* be able to chose between word lengths (5-6-7)
 * implement gameroom chat
-* reconnecting to existing game
-    - fetch guessed words history
-    - add max width + more stylign to guessed words
-    - reconnect to the same room
+
 * implement tictactoe
 
 * be able to register
