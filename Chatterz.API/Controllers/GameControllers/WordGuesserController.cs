@@ -69,6 +69,8 @@ namespace Chatterz.API.Controllers.GameControllers
             await _gameManager.GameEnded("wordguesser" + game.Id, opponent.UserName + " has left, the game has ended, you win!");
             await _userService.DisconnectFromWordguesser(playerId);
             var winner = game.Players.FirstOrDefault(p => p.Id != playerId);
+            if (winner != null)
+                await _userService.DisconnectFromWordguesser(winner.Id);
 
             if (!game.IsGameOver) // player who disconnects after the first player 
                                   //has disconnected should not trigger another game end event
@@ -81,14 +83,16 @@ namespace Chatterz.API.Controllers.GameControllers
         [Route("api/game/wordguesser/win")]
         public async Task<ActionResult> GameWin(int gameId, int playerId)
         {
-            // TODO: game ends and we set the winner
-            // send update to the gameroom with the notification that the other player has won
-            // option to start another game after the game was won
             var game = await _gameService.GetIncludingPlayers(gameId);
             var player = game.Players.Where(p => p.Id == playerId).First();
+            var otherPlayer = game.Players.Where(p => p.Id != playerId).First();
 
             await _gameManager.GameWin("wordguesser" + gameId, player.UserName + " has won!");
             await _gameService.EndGame(gameId, playerId);
+
+            // dc both players from the game
+            await _userService.DisconnectFromWordguesser(player.Id);
+            await _userService.DisconnectFromWordguesser(otherPlayer.Id);
 
             return Ok();
         }
