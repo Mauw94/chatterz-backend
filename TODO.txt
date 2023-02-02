@@ -2,11 +2,10 @@
 * show winning word when wordguesser ends
 * time is saved in utc-1 when retrieving old chatmessages in the chatroom
 * make guessed words uppercase
+* when game ends, be put back in the same chatroom u were in before
 
 ------ TODO ------
-* implement gameroom chat
 * show when someone declines your game invite
-
 * ask if u want to leave the game when refreshing or leaving the page
 * implement tictactoe
 
@@ -21,16 +20,12 @@
 * redo login/auth in a proper way
 * toggle if chatroom is still active or not
 * create 1 service for chatroom/user service to combine joining/leaving logic
-* show scrollbar for chatrooms -> fixed width like chatMessages
-* show scrollbar for gamerooms -> fixed width liek chatMessages
-* create gameroom
-* be able to switch chat component to gameroom chat/chatroom chat
-* gameroom (max 2) and chatroom (max 5) are different
 * allow people to spectate games?
 * only admin users can add or remove a chatroom
 * show logging in icon when logging in
 * difference between public and private rooms
 * unit tests :> ): >:|
+* be able to add another user as a friend
 * send notification when one of ur friends comes online
 * implement auth with google gmail
 * create hostedservice to empty db and cache every x time

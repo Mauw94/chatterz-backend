@@ -90,6 +90,20 @@ namespace Chatterz.API.Controllers
             return Ok();
         }
 
+        [HttpPost]
+        [Route("api/users/decline_gameinvite")]
+        public async Task<ActionResult> DeclineGameInvite(GameInviteDto gameInvite)
+        {
+            var user = await _userService.GetAsync(gameInvite.UserId);
+            var challenger = await _userService.GetAsync(gameInvite.Challenger.Id);
+
+            await _hubContext.Clients
+                .Client(challenger.ConnectionId)
+                .SendAsync("DeclineGameInvite", user.UserName + " declined the game invite.");
+
+            return Ok();
+        }
+
         [HttpGet]
         [Route("api/users/check_game_inprogress")]
         public async Task<ActionResult<int>> CheckWordGuesserGameInProgres(int userId)

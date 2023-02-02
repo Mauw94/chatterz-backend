@@ -13,14 +13,6 @@ namespace Chatterz.API.Controllers.GameControllers
         private readonly IUserService _userService;
         private readonly IGameManager _gameManager;
 
-        // TODO: create gamehub
-        // create seperate manager to handle signalR gamehub?
-        // add players to gamehub group when connecting
-        // 
-        // when games full send activation to the connected players
-        // game is being played
-        // update every turn
-
         public WordGuesserController(IWordGuesserService service, IUserService userService, IGameManager gameManager)
         {
             _gameService = service;
@@ -32,9 +24,6 @@ namespace Chatterz.API.Controllers.GameControllers
         [Route("api/game/wordguesser/create")]
         public async Task<ActionResult<int>> Create()
         {
-            // TODO: call this when other user accepts the game invite
-            // call Connect when launching the game component
-
             var gameId = await _gameService.Create();
             return Ok(gameId);
         }
