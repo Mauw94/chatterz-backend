@@ -16,15 +16,11 @@ namespace Chatterz.Services.Services
 
         public async Task<string> GenerateRandomWord(WordGuesser game, int wordLength)
         {
-            var word = string.Empty;
-            var abc = "abcdefghijklmnopqrstuvwxyz";
-            var random = new Random();
-
-            for (int i = 0; i < wordLength; i++)
-            {
-                var rnd = random.Next(0, abc.Length);
-                word += abc[rnd];
-            }
+            var path = "C:\\Projects\\fun\\chatterz\\backend\\Chatterz.Services\\word-dictionaries\\";
+            var fullPath = path + wordLength + "-letter.txt";
+            var words = await File.ReadAllLinesAsync(fullPath);
+            var rnd = new Random().Next(0, words.Length);
+            var word = words[rnd].ToLower();
 
             game.WordToGuess = word;
             await _wordGuesserRepository.UpdateAsync(game);

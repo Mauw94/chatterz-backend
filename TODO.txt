@@ -2,11 +2,11 @@
 
 
 ------ TODO ------
-* ask if u want to leave the game when refreshing or leaving the page
 * use word dictionaries in api to generate real word
-* be able to chose between word lengths (5-6-7)
+* be able to chose between word lengths (4-5-6-7-8-9-10)
 * implement gameroom chat
 
+* ask if u want to leave the game when refreshing or leaving the page
 * implement tictactoe
 
 * be able to register

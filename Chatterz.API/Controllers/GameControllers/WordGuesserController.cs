@@ -106,12 +106,12 @@ namespace Chatterz.API.Controllers.GameControllers
 
         [HttpGet]
         [Route("api/game/wordguesser/start")]
-        public async Task<ActionResult> Start(int gameId)
+        public async Task<ActionResult> Start(int gameId, int wordLength)
         {
             var game = await _gameService.GetIncludingPlayers(gameId);
             await _gameService.Start(game);
             await _gameManager.SendGameroomUpdate("wordguesser" + game.Id, "game started, let's GOO!");
-            await _gameService.GenerateRandomWord(game, 4);
+            await _gameService.GenerateRandomWord(game, wordLength);
 
             var wordGuesserDto = new WordGuesserDto()
             {
