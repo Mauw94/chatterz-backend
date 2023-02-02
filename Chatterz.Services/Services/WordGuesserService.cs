@@ -20,7 +20,7 @@ namespace Chatterz.Services.Services
             var fullPath = path + wordLength + "-letter.txt";
             var words = await File.ReadAllLinesAsync(fullPath);
             var rnd = new Random().Next(0, words.Length);
-            var word = words[rnd].ToLower();
+            var word = words[rnd].ToUpper();
 
             game.WordToGuess = word;
             await _wordGuesserRepository.UpdateAsync(game);

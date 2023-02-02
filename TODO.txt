@@ -1,10 +1,11 @@
 ------ BUGS ------
-
+* show winning word when wordguesser ends
+* time is saved in utc-1 when retrieving old chatmessages in the chatroom
+* make guessed words uppercase
 
 ------ TODO ------
-* use word dictionaries in api to generate real word
-* be able to chose between word lengths (4-5-6-7-8-9-10)
 * implement gameroom chat
+* show when someone declines your game invite
 
 * ask if u want to leave the game when refreshing or leaving the page
 * implement tictactoe

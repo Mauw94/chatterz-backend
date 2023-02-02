@@ -94,7 +94,8 @@ namespace Chatterz.API.Controllers.GameControllers
             var player = game.Players.Where(p => p.Id == playerId).First();
             var otherPlayer = game.Players.Where(p => p.Id != playerId).First();
 
-            await _gameManager.GameWin("wordguesser" + gameId, player.UserName + " has won!");
+            await _gameManager.GameWin("wordguesser" + gameId, "The winning word was: " + game.WordToGuess
+                + "\n" + player.UserName + " has won!");
             await _gameService.EndGame(gameId, playerId);
 
             // dc both players from the game
