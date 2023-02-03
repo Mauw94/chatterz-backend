@@ -1,22 +1,13 @@
 ------ BUGS ------
-* show winning word when wordguesser ends
 * time is saved in utc-1 when retrieving old chatmessages in the chatroom
-* make guessed words uppercase
-* when game ends, be put back in the same chatroom u were in before
 
 ------ TODO ------
-* show when someone declines your game invite
+* be able to register
+* set login flag in user table in db
+* implement bomberman
+
 * ask if u want to leave the game when refreshing or leaving the page
 * implement tictactoe
-
-* be able to register
-* move create chatroom/change username from navbar to someplace else
-* update gameconnectionId for the player (user)
-* don't logout when chatsignalR connection is broken
-* be able to reconnect to existing game
-* create chatroom for the gameroom 
-
-* set login flag in user table in db
 * redo login/auth in a proper way
 * toggle if chatroom is still active or not
 * create 1 service for chatroom/user service to combine joining/leaving logic

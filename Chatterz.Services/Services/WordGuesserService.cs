@@ -16,6 +16,7 @@ namespace Chatterz.Services.Services
 
         public async Task<string> GenerateRandomWord(WordGuesser game, int wordLength)
         {
+            // TODO: fix path for prod env
             var path = "C:\\Projects\\fun\\chatterz\\backend\\Chatterz.Services\\word-dictionaries\\";
             var fullPath = path + wordLength + "-letter.txt";
             var words = await File.ReadAllLinesAsync(fullPath);
