@@ -74,6 +74,17 @@ namespace Chatterz.DataAccess.Repositories
                 .Include(c => c.Users)
                 .ToListAsync();
 
+            foreach (var chatroom in chatrooms)
+            {
+                foreach (var user in chatroom.Users.ToArray())
+                {
+                    if (!user.IsLoggedIn)
+                    {
+                        chatroom.Users.Remove(user);
+                    }
+                }
+            }
+
             return chatrooms;
         }
 
