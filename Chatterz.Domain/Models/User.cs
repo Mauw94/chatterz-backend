@@ -9,5 +9,6 @@ namespace Chatterz.Domain.Models
         public string? GameConnectionId { get; set; }
         public int? ChatroomId { get; set; }
         public int? WordGuesserId { get; set; }
+        public bool IsLoggedIn { get; set; } = false;
     }
 }

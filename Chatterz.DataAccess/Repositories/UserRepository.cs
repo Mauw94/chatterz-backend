@@ -26,6 +26,7 @@ namespace Chatterz.DataAccess.Repositories
             if (user == null)
                 throw new ArgumentException($"No user with id {userId}");
 
+            user.IsLoggedIn = false;
             user.ChatroomId = null;
             ApplicationDbContext.Users.Update(user);
             await ApplicationDbContext.SaveChangesAsync();

@@ -10,6 +10,11 @@ namespace Chatterz.Services.Interfaces
         Task<User> Login(string userName, string password);
 
         /// <summary>
+        /// Set the user as logged in.
+        /// </summary>
+        Task SetLoggedIn(User user);
+
+        /// <summary>
         /// Logout user.
         /// </summary>
         Task<User> Logout(int userId);

@@ -23,6 +23,12 @@ namespace Chatterz.Services.Services
             return await _userRepo.Login(userName, password);
         }
 
+        public async Task SetLoggedIn(User user)
+        {
+            user.IsLoggedIn = true;
+            await _userRepo.UpdateAsync(user);
+        }
+
         public async Task UpdateConnectionInfo(int id, string connectionId)
         {
             var user = await _userRepo.GetAsync(id);

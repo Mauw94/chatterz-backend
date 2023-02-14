@@ -14,7 +14,6 @@ namespace Chatterz.API.Controllers
         private readonly IUserService _userService;
         private readonly ISignalRManager _signalRManager;
 
-
         public LoginController(
             IUserService userService,
             ISignalRManager signalRManager)
@@ -31,6 +30,8 @@ namespace Chatterz.API.Controllers
             if (user == null)
                 return BadRequest("Login credentials do not match.");
 
+            await _userService.SetLoggedIn(user);
+            
             return Ok(user);
         }
 
