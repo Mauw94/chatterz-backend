@@ -2,8 +2,6 @@ using Chatterz.Domain.Models;
 using Chatterz.Domain.DTO;
 using Microsoft.AspNetCore.Mvc;
 using Chatterz.Services.Interfaces;
-using Microsoft.AspNetCore.SignalR;
-using Chatterz.HUBS;
 using Chatterz.API.Manages.Interfaces;
 
 namespace Chatterz.API.Controllers

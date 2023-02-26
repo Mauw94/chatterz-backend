@@ -3,10 +3,8 @@
 
 ------ TODO ------
 * be able to register
-* set login flag in user table in db
-* implement bomberman
+* create profile page
 
-* ask if u want to leave the game when refreshing or leaving the page
 * implement tictactoe
 * redo login/auth in a proper way
 * toggle if chatroom is still active or not
