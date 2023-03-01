@@ -2,13 +2,10 @@
 * time is saved in utc-1 when retrieving old chatmessages in the chatroom
 
 ------ TODO ------
-* be able to register
 * create profile page
-
 * implement tictactoe
 * redo login/auth in a proper way
 * toggle if chatroom is still active or not
-* create 1 service for chatroom/user service to combine joining/leaving logic
 * allow people to spectate games?
 * only admin users can add or remove a chatroom
 * show logging in icon when logging in

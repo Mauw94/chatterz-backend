@@ -13,9 +13,8 @@ namespace Chatterz.DataAccess.Repositories
         public async Task<int> GetHighScore()
         {
             return await ApplicationDbContext.SpaceInvaders
-                .Select(x => x.Id)
-                .OrderByDescending(x => x)
-                .FirstAsync();
+                .Select(x => x.Score)
+                .MaxAsync();
         }
     }
 }
