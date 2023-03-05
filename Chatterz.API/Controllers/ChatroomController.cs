@@ -1,9 +1,7 @@
 using Chatterz.Domain.Models;
 using Chatterz.Domain.DTO;
-using Chatterz.HUBS;
 using Chatterz.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Chatterz.API.Manages.Interfaces;
 
@@ -12,20 +10,17 @@ namespace Chatterz.API.Controllers
     [ApiController]
     public class ChatroomController : ControllerBase
     {
-        private readonly IHubContext<ChatHub> _hubContext;
         private readonly IUserService _userService;
         private readonly IChatroomService _chatroomService;
         private readonly ISignalRManager _signalRManager;
         private readonly IService<ChatMessage> _chatMessageService;
 
         public ChatroomController(
-            IHubContext<ChatHub> hubContext,
             IUserService userService,
             IChatroomService chatroomService,
             ISignalRManager signalRManager,
             IService<ChatMessage> chatMessageService)
         {
-            _hubContext = hubContext;
             _userService = userService;
             _chatroomService = chatroomService;
             _signalRManager = signalRManager;

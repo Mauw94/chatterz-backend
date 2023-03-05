@@ -2,6 +2,7 @@
 * time is saved in utc-1 when retrieving old chatmessages in the chatroom
 
 ------ TODO ------
+* add notification system
 * create profile page
 * implement tictactoe
 * redo login/auth in a proper way
