@@ -14,9 +14,9 @@ namespace Chatterz.Services.Services
             _chatroomRepo = chatroomRepo;
         }
 
-        public async Task<int> AddChatroomAsync(Chatroom chatroom)
+        public async Task<int> AddChatroomAsync()
         {
-            return await _chatroomRepo.AddChatroomAsync(chatroom);
+            return await _chatroomRepo.AddChatroomAsync();
         }
 
         public async Task<Chatroom> AddUserToChatroom(int id, User user)

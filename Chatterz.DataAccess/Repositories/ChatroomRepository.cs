@@ -10,8 +10,13 @@ namespace Chatterz.DataAccess.Repositories
 
         public ChatroomRepository(ApplicationDbContext context) : base(context) { }
 
-        public async Task<int> AddChatroomAsync(Chatroom chatroom)
+        public async Task<int> AddChatroomAsync()
         {
+            var chatroom = new Chatroom();
+            if (chatroom.Name == string.Empty)
+            {
+                throw new Exception($"Something went wrong creating a chatroom object.");
+            }
             await ApplicationDbContext.Chatrooms.AddAsync(chatroom);
             await ApplicationDbContext.SaveChangesAsync();
 
