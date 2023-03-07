@@ -13,13 +13,13 @@ namespace Chatterz.API.Controllers
         private readonly IUserService _userService;
         private readonly IChatroomService _chatroomService;
         private readonly ISignalRManager _signalRManager;
-        private readonly IService<ChatMessage> _chatMessageService;
+        private readonly IChatMessageService _chatMessageService;
 
         public ChatroomController(
             IUserService userService,
             IChatroomService chatroomService,
             ISignalRManager signalRManager,
-            IService<ChatMessage> chatMessageService)
+            IChatMessageService chatMessageService)
         {
             _userService = userService;
             _chatroomService = chatroomService;
@@ -40,7 +40,7 @@ namespace Chatterz.API.Controllers
         public async Task<ActionResult<int>> Create()
         {
             var allChatrooms = await _chatroomService.GetAllWithUsers();
-            var id = await _chatroomService.AddChatroomAsync(new Chatroom());
+            var id = await _chatroomService.AddChatroomAsync();
 
             return Ok(id);
         }
@@ -86,10 +86,7 @@ namespace Chatterz.API.Controllers
         [Route("api/chatroom/history")]
         public async Task<ActionResult<List<ChatMessage>>> GetChatHistory(int chatroomId)
         {
-            var chatMessages = await _chatMessageService
-                .GetAllAsQueryable(c => c.ChatroomId == chatroomId)
-                .Where(c => c.DateTime.Date.Day == DateTime.Now.Date.Day)
-                .ToListAsync();
+            var chatMessages = await _chatMessageService.GetChatHistory(chatroomId);
 
             return Ok(chatMessages);
         }
