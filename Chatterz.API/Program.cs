@@ -15,7 +15,7 @@ namespace Chatterz.API
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-            var connectionString = builder.Configuration.GetConnectionString("DockerConnection");
+            var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
@@ -34,6 +34,8 @@ namespace Chatterz.API
             builder.Services.AddScoped<ISpaceInvadersService, SpaceInvadersService>();
             builder.Services.AddScoped<ISignalRManager, SignalRManager>();
             builder.Services.AddScoped<IGameManager, GameManager>();
+            builder.Services.AddScoped<IChatMessageRepository, ChatMessageRepository>();
+            builder.Services.AddScoped<IChatMessageService, ChatMessageService>();
 
             var app = builder.Build();
 
