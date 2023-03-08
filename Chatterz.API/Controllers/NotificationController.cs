@@ -1,3 +1,4 @@
+using Chatterz.API.Helpers;
 using Chatterz.HUBS;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
@@ -18,6 +19,6 @@ public class NotificationController : ControllerBase
     [Route("api/notification/send")]
     public async Task SendNotification()
     {
-        await _hubContext.Clients.All.SendAsync("Notification", "test123");
+        await _hubContext.Clients.All.SendAsync(Consts.SignalRConsts.Notification.SendNotification, "test123");
     }
 }
