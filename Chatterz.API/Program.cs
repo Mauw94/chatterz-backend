@@ -60,6 +60,7 @@ namespace Chatterz.API
             app.MapControllers();
             app.MapHub<ChatHub>("/signalr");
             app.MapHub<GameHub>("/signalr_game");
+            app.MapHub<NotificationHub>("/signalr_notification");
             app.Run();
         }
     }

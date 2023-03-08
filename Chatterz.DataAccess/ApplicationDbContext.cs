@@ -12,5 +12,6 @@ namespace Chatterz.DataAccess
         public DbSet<ChatMessage> ChatMessages { get; set; }
         public DbSet<WordGuesser> WordGuessers { get; set; }
         public DbSet<SpaceInvaders> SpaceInvaders { get; set; }
+        public DbSet<Notification> Notifications { get; set; }
     }
 }
