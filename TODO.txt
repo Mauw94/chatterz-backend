@@ -2,6 +2,11 @@
 * time is saved in utc-1 when retrieving old chatmessages in the chatroom
 
 ------ TODO ------
+* add same helper consts class to frontend
+(sync this class when opening the application and connection with backend is made?)
+* create notification popups when receiving a notification
+* notification should work with connectionid instead of user id
+
 * add notification system
 * create profile page
 * implement tictactoe
